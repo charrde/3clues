@@ -578,6 +578,13 @@ h1 {
     transition-property: var(--transition-colors);
 }
 
+#modal-message {
+    color: var(--text);
+    font-weight: bold;
+    transition: var(--transition03);
+    transition-property: var(--transition-colors);
+}
+
 /* Instructions Modal */
 #instruction-modal-overlay {
     display: none;

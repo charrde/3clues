@@ -38,6 +38,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const accordionToggle = document.querySelector('.accordion-toggle');
     const accordionContent = document.querySelector('.accordion-content');
 
+    accordionContent.classList.add('expanded');
+
     accordionToggle.addEventListener('click', () => {
         if (accordionContent.classList.contains('expanded')) {
             accordionContent.classList.remove('expanded');
@@ -356,6 +358,7 @@ function showModal() {
     }
     document.getElementById('modal-highscore').innerHTML = `High Score: <span>${currentScore}</span>`;
     document.getElementById('modal-title').innerText = gameWon ? 'Woohoo! 🎉' : 'Game Over!';
+    document.getElementById('modal-message').innerText = gameWon ? 'Come back tomorrow for another puzzle!' : 'Come back tomorrow to try again on a new puzzle!';
 }
 
 
