@@ -34,6 +34,18 @@ document.addEventListener("DOMContentLoaded", function () {
             submitGuess();
         }
     });
+
+	const themeToggle = document.getElementById('theme-toggle');
+	const storedTheme = localStorage.getItem('theme') || 'light';
+	document.documentElement.setAttribute('data-theme', storedTheme);
+	themeToggle.checked = storedTheme === 'dark';
+
+	themeToggle.addEventListener('change', () => {
+		const newTheme = themeToggle.checked ? 'dark' : 'light';
+		document.documentElement.setAttribute('data-theme', newTheme);
+		localStorage.setItem('theme', newTheme);
+	});
+
 });
 
 function startGame() {
