@@ -690,7 +690,7 @@ h1 {
     cursor: pointer;
     transition: var(--transition03);
     transition-property: var(--transition-colors);
-    font-size: 1rem;
+    font-size: 0.75rem;
 }
 
 .btn-instructions:hover {
@@ -748,7 +748,6 @@ h1 {
     background-color: var(--card);
     box-shadow: 0 8px 16px rgba(0,0,0,0.1);
     border-radius: 12px;
-    margin-bottom: 20px;
     gap: 20px;
     z-index: 100;
     transition: var(--transition03);
