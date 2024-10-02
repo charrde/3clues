@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Three Clues Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Link to the CSS file -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400..700;1,400..700&display=swap"
+        rel="stylesheet">
+    <script src="gameData.js" defer></script>
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+
+    <div id="modal-overlay">
+        <div id="modal">
+            <h2 id="modal-title"></h2>
+            <p id="modal-word"></p>
+            <p id="modal-category"></p>
+            <p id="modal-hints-used"></p>
+            <p id="modal-score-gained"></p>
+            <br>
+            <p id="modal-streak"></p>
+            <p id="modal-highscore"></p>
+            <button id="modal-close" class="btn-close">Close</button>
+        </div>
+    </div>
+
+    <div id="game-wrapper">
+        <!-- Mode Selector -->
+        <div id="mode-selector">
+            <button id="daily-mode-btn" class="mode-btn active">Daily Challenge</button>
+            <button id="practice-mode-btn" class="mode-btn">Practice Mode</button>
+        </div>
+        <div id="main-game">
+            <div id="game-container">
+                <h1>Three Clues</h1>
+                <!-- Clues -->
+                <div id="clues">
+                    <p class="clue" id="clue1"></p>
+                    <p class="clue" id="clue2"></p>
+                    <p class="clue" id="clue3"></p>
+                </div>
+                <input type="text" id="guess-input" placeholder="What's the word?" disabled>
+                <!-- Submit Button -->
+                <button class="btn-submit" disabled>Submit Guess</button>
+                <!-- Hint and Category Buttons -->
+                <div class="button-group">
+                    <button class="btn btn-hint" disabled>Hint</button>
+                    <button class="btn btn-category" disabled>Reveal Category</button>
+                </div>
+                <!-- Messages and Hints -->
+                <div id="message"></div>
+                <div id="attempts"></div>
+                <div id="hint"></div>
+                <div id="category"></div>
+            </div>
+            <!-- Scoreboard Container -->
+            <div id="scoreboard-container">
+                <div id="scoreboard">
+                    <div>
+                        <strong>Score</strong>
+                        <div class="scoreboard-text" id="current-score">0</div>
+                    </div>
+                    <div>
+                        <strong>High Score</strong>
+                        <div class="scoreboard-text" id="high-score">0</div>
+                    </div>
+                    <div>
+                        <strong>Streak</strong>
+                        <div class="scoreboard-text" id="streak">0</div>
+                    </div>
+                    <div>
+                        <strong>Lifetime Hints Used</strong>
+                        <div class="scoreboard-text" id="lifetime-hints-used">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Guess History Container -->
+        <div id="guess-history-container">
+            <h2>Your Guesses</h2>
+            <div id="guess-history">
+                <div class="guess-tile" id="guess1"></div>
+                <div class="guess-tile" id="guess2"></div>
+                <div class="guess-tile" id="guess3"></div>
+                <div class="guess-tile" id="guess4"></div>
+                <div class="guess-tile" id="guess5"></div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

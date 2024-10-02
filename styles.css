@@ -1,0 +1,440 @@
+/* Reset and basic styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Cabin', sans-serif;
+}
+
+:root {
+    --transition-colors: color, background-color, border-color, color-mix, box-shadow, linear-gradient, outline-color;
+    --transition-all: all;
+    --transition03: 0.3s ease;
+    --transition05: 0.5s ease;
+}
+
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f5f6fa;
+    color: #2f3640;
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Mode Selector Styles */
+#mode-selector {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.mode-btn {
+    padding: 15px;
+    font-size: 1em;
+    border: none;
+    cursor: pointer;
+    background-color: #dcdde1;
+    color: #2f3640;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    transition: var(--transition03);
+    transition-property: var(--transition-colors);
+}
+
+.mode-btn.active {
+    background-color: #e84118;
+    color: #ffffff;
+}
+
+/* Game Wrapper */
+#game-wrapper {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* Main Game Container */
+#main-game {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Game Container */
+#game-container {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+/* Scoreboard Container */
+#scoreboard-container {
+    background-color: #ffffff;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+/* Guess History Container */
+#guess-history-container {
+    width: 100%;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+#guess-history-container h2 {
+    margin-bottom: 20px;
+    font-size: 2em;
+    color: #273c75;
+    text-align: center;
+}
+
+/* Game Title */
+h1 {
+    margin-bottom: 20px;
+    font-size: 3.5em;
+    color: #273c75;
+}
+
+/* Clues */
+#clues {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.clue {
+    background-color: #f1f2f6;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: bold;
+    color: #273c75;
+    width: 100%;
+    text-align: center;
+}
+
+/* Input Field */
+#guess-input {
+    padding: 15px;
+    width: 100%;
+    border: 2px solid #dcdde1;
+    border-radius: 8px;
+    font-size: 1em;
+    margin-bottom: 15px;
+    outline: none;
+    transition: var(--transition03);
+    transition-property: var(--transition-colors);
+}
+
+#guess-input:focus {
+    border-color: #273c75;
+}
+
+/* Submit Button */
+.btn-submit {
+    width: 100%;
+    padding: 15px;
+    font-size: 1em;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: #44bd32;
+    color: #fff;
+    transition: background-color 0.3s ease;
+    margin-bottom: 15px;
+    transition: var(--transition03);
+    transition-property: var(--transition-colors);
+}
+
+.btn-submit:hover {
+    background-color: #4cd137;
+}
+
+/* Hint and Category Buttons */
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.btn {
+    padding: 12px 10px;
+    font-size: 0.9em;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #fff;
+    transition: var(--transition03);
+    transition-property: var(--transition-colors);
+}
+
+.btn-hint {
+    background-color: #e1b12c;
+    transition: var(--transition03);
+    transition-property: var(--transition-colors);
+}
+
+.btn-hint:hover {
+    background-color: #fbc531;
+}
+
+.btn-category {
+    background-color: #8c7ae6;
+    transition: var(--transition03);
+    transition-property: var(--transition-colors);
+}
+
+.btn-category:hover {
+    background-color: #9c88ff;
+}
+
+/* Messages */
+#message {
+    margin-top: 10px;
+    font-size: 1.1em;
+}
+
+#attempts {
+    color: #e84118;
+    margin-top: 5px;
+}
+
+/* Disabled State */
+.btn:disabled, .btn-submit:disabled {
+    background-color: #7f8fa6;
+    cursor: not-allowed;
+}
+
+/* Hint and Category Style */
+#hint, #category {
+    margin-top: 15px;
+    font-style: italic;
+    color: #487eb0;
+}
+
+/* Guess History */
+#guess-history {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.guess-tile {
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #f1f2f6;
+    color: #2f3640;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    position: relative;
+    transition: var(--transition03);
+    transition-property: var(--transition-colors);
+}
+
+/* Correct and Incorrect Guess Tiles */
+.guess-tile.correct {
+    background-color: #44bd32;
+    color: #ffffff;
+    transform: scale(1.02);
+}
+
+.guess-tile.incorrect {
+    background-color: #e84118;
+    color: #ffffff;
+}
+
+/* Icons */
+.guess-tile .icon {
+    font-size: 1.5em;
+    margin-right: 10px;
+}
+
+/* Handle long words */
+.guess-text {
+    word-wrap: break-word;
+    word-break: break-word;
+    flex: 1;
+}
+
+/* Scoreboard */
+#scoreboard {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    font-size: 1em;
+    color: #2f3640;
+}
+
+#scoreboard > div {
+    background-color: #f1f2f6;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+/* Modal Styles */
+#modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+#modal {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+#modal h2 {
+    margin-bottom: 20px;
+    font-size: 4em;
+    color: #5962a1;
+    animation: glow 1s infinite alternate;
+}
+
+@keyframes glow {
+    from {
+        text-shadow: 0 0 5px #979dbe;
+    }
+    to {
+        text-shadow: 0 0 10px #979dbe;
+    }
+}
+
+#modal p {
+    margin-bottom: 15px;
+    font-size: 1.6em;
+}
+
+#modal .btn-close {
+    background-color: #2f3640;
+    color: #fff;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 20px;
+    font-size: 1em;
+    transition: var(--transition03);
+    transition-property: var(--transition-colors);
+}
+
+#modal .btn-close:hover {
+    background-color: #3b3e4d;
+}
+
+#modal-word {
+    font-weight: bold;
+}
+
+#modal-hints-used {
+    color: #487eb0;
+    font-weight: bold;
+}
+
+#modal-score-gained {
+    color: #487eb0;
+    font-weight: bold;
+}
+
+#modal-streak {
+    color: #487eb0;
+    font-weight: bold;
+}
+
+#modal-word {
+    color: #273c75;
+    font-weight: bold;
+}
+
+#modal-highscore {
+    color: #171717;
+    font-weight: bold;
+}
+
+/* Add a background effect */
+#modal {
+    background: linear-gradient(to right, #f1f2f6, #dcdde1);
+}
+
+/* Responsive styles for desktop */
+@media (min-width: 768px) {
+    #game-wrapper {
+        max-width: 900px;
+        flex-wrap: wrap;
+    }
+
+    #main-game {
+        width: 60%;
+    }
+
+    #guess-history-container {
+        width: calc(40% - 20px);
+    }
+
+    #clues {
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    .button-group {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    #mode-selector {
+        flex-direction: row;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .mode-btn {
+        flex: 1;
+        margin-bottom: 0;
+    }
+
+    #scoreboard > div {
+        width: calc(50% - 10px);
+    }
+    .btn {
+        width: 50%;
+    }
+}
