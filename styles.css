@@ -15,24 +15,25 @@
 
 :root[data-theme="light"] {
     --text: #171717;
-    --text-static: #e8e8e8;
-    --heading: #5961a1;
+    --text-static-light: #e8e8e8;
+    --text-static-dark: #2C2C2C;
     --text-excitement: #FFAA33;
-    --clue: #273c75;
     --background: #f2f2f2;
     --card: #fff;
     --box: #F1F2F3;
-    --success: #44bd32;
-    --warning: #e84118;
-    --submit: #44bd32;
-    --submit-hover: #4cd137;
+    --success: #19A700;
+    --option: #F6B3A2;
+    --warning: #A31300;
+    --fail: #930700;
+    --submit: #9CCEA0;
+    --submit-hover: #7fb884;
     --close: #2f3640;
     --close-hover: #3b3e4d;
-    --disabled: #7f8fa6;
-    --hint: #e1b12c;
-    --hint-hover: #fbc531;
-    --reveal: #8c7ae6;
-    --reveal-hover: #9c88ff;
+    --disabled: #b0b8c4;
+    --hint: #99EDFD;
+    --hint-hover: #7bd4e3;
+    --reveal: #C7BFF3;
+    --reveal-hover: #b1a8e2;
     --accent: #273c75;
     --highlight: #487EB0;
     --theme-toggle: #FFD700;
@@ -40,29 +41,43 @@
 }
 
 :root[data-theme="dark"] {
-    --text: #e8e8e8;
-    --text-static: #e8e8e8;
-    --heading: #5e66a6;
+    --text: #E1E1E1;
+    --text-static-light: #e8e8e8;
+    --text-static-dark: #2C2C2C;
     --text-excitement: #FFCC66;
-    --clue: #576fca;
-    --background: #0d0d0d;
+    --background: #1e1e1e;
     --card: #191919;
     --box: #1e1e1e;
-    --success: #44bd32;
-    --warning: #e84118;
-    --submit: #44bd32;
-    --submit-hover: #4cd137;
-    --close: #414754;
+    --success: #0C5300;
+    --option: #4B1414;
+    --warning: #FF806F;
+    --fail: #930700;
+    --submit: #0C4E00;
+    --submit-hover: #4da346;
+    --close: #3b3e4d;
     --close-hover: #4c5060;
-    --disabled: #a0b1c9;
-    --hint: #e1b12c;
-    --hint-hover: #fbc531;
-    --reveal: #8c7ae6;
-    --reveal-hover: #9c88ff;
+    --disabled: #7f8fa6;
+    --hint: #023640;
+    --hint-hover: #3a7981;
+    --reveal: #2E2370;
+    --reveal-hover: #7d73cc;
     --accent: #576fca;
     --highlight: #5a9fd8;
     --theme-toggle: #1E3A8A;
     --theme-accent: #151414;
+}
+
+footer {
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+    background-color: var(--card);
+    color: var(--text);
+    font-size: 1em;
+    margin-top: 20px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    transition: var(--transition03);
+    transition-property: var(--transition-colors);
 }
 
 .switch {
@@ -70,7 +85,7 @@
     position: relative;
     display: inline-block;
     width: 3.5em;
-    height: 2em;
+    height: 2.4rem;
 }
 
 .switch input {
@@ -102,7 +117,7 @@
     width: 1.4em;
     border-radius: 8px;
     left: 0.3em;
-    bottom: 0.3em;
+    bottom: 0.4em;
     background-color: var(--theme-accent);
     transition: 0.4s;
     transform: rotate(270deg);
@@ -143,6 +158,7 @@ body {
     min-height: 100vh;
     transition: var(--transition03);
     transition-property: var(--transition-colors);
+    flex-wrap: wrap;
 }
 
 /* Mode Selector Styles */
@@ -167,8 +183,8 @@ body {
 }
 
 .mode-btn.active {
-    background-color: #e84118;
-    color: #ffffff;
+    background-color: var(--option);
+    color: var(--text);
 }
 
 /* Game Wrapper */
@@ -197,6 +213,7 @@ body {
     text-align: center;
     transition: var(--transition03);
     transition-property: var(--transition-colors);
+    position: relative;
 }
 
 /* Scoreboard Container */
@@ -224,17 +241,22 @@ body {
 #guess-history-container h2 {
     margin-bottom: 20px;
     font-size: 2em;
-    color: var(--heading);
+    color: var(--text);
     text-align: center;
     transition: var(--transition03);
     transition-property: var(--transition-colors);
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
 }
 
 /* Game Title */
 h1 {
     margin-bottom: 20px;
     font-size: 3.5em;
-    color: var(--heading);
+    color: var(--text);
     transition: var(--transition03);
     transition-property: var(--transition-colors);
 }
@@ -252,7 +274,7 @@ h1 {
     padding: 10px;
     border-radius: 8px;
     font-weight: bold;
-    color: var(--clue);
+    color: var(--highlight);
     width: 100%;
     text-align: center;
     transition: var(--transition03);
@@ -301,7 +323,6 @@ h1 {
 /* Hint and Category Buttons */
 .button-group {
     display: flex;
-    flex-direction: column;
     gap: 10px;
     margin-bottom: 15px;
 }
@@ -318,6 +339,7 @@ h1 {
 }
 
 .btn-hint {
+    width: 50%;
     background-color: var(--hint);
     transition: var(--transition03);
     transition-property: var(--transition-colors);
@@ -328,6 +350,7 @@ h1 {
 }
 
 .btn-category {
+    width: 50%;
     background-color: var(--reveal);
     transition: var(--transition03);
     transition-property: var(--transition-colors);
@@ -341,11 +364,18 @@ h1 {
 #message {
     margin-top: 10px;
     font-size: 1.1em;
+    color: var(--text);
+    transition: var(--transition03);
+    transition-property: var(--transition-colors);
 }
 
 #attempts {
     color: var(--warning);
     margin-top: 5px;
+    font-weight: bold;
+    font-size: 1.1em;
+    transition: var(--transition03);
+    transition-property: var(--transition-colors);
 }
 
 /* Disabled State */
@@ -373,25 +403,24 @@ h1 {
     padding: 15px;
     border-radius: 8px;
     background-color: var(--box);
-    color: var(--text);
+    color: var(--text-static-light);
     font-weight: bold;
     display: flex;
     align-items: center;
     position: relative;
     transition: var(--transition03);
     transition-property: var(--transition-colors);
+
 }
 
 /* Correct and Incorrect Guess Tiles */
 .guess-tile.correct {
     background-color: var(--success);
-    color: var(--text);
     transform: scale(1.02);
 }
 
 .guess-tile.incorrect {
-    background-color: var(--warning);
-    color: var(--text);
+    background-color: var(--fail);
 }
 
 /* Icons */
@@ -491,7 +520,7 @@ h1 {
 
 #modal .btn-close {
     background-color: var(--close);
-    color: var(--text-static);
+    color: var(--text-static-light);
     padding: 12px 25px;
     border: none;
     border-radius: 8px;
@@ -549,7 +578,239 @@ h1 {
     transition-property: var(--transition-colors);
 }
 
-/* Add a background effect */
+/* Instructions Modal */
+#instruction-modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    transition: var(--transition03);
+}
+
+#instruction-modal {
+    background-color: var(--card);
+    color: var(--text);
+    padding: 25px;
+    border-radius: 12px;
+    max-width: 700px;
+    overflow: hidden;
+    overflow-y: auto;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3);
+    text-align: left;
+    line-height: 1.6;
+    font-size: 1.2em;
+    animation: slideIn 0.5s ease forwards;
+    padding-top: 50px;
+    width: 100%;
+}
+
+#instruction-modal-wrapper {
+    position: relative;
+    display: flex;
+    padding: 20px;
+    max-height: 80vh;
+}
+
+/* Animation for modal */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#instruction-modal h2 {
+    text-align: center;
+    color: var(--accent);
+    margin-bottom: 20px;
+    font-size: 2.5em;
+}
+
+#instruction-modal h3 {
+    color: var(--heading);
+    margin-top: 15px;
+    margin-bottom: 10px;
+    font-size: 1.6em;
+}
+
+#instruction-modal p, #instruction-modal ul {
+    margin-bottom: 10px;
+}
+
+#instruction-modal ul {
+    list-style: inside disc;
+    margin-left: 20px;
+}
+
+#instruction-modal ul li {
+    margin-bottom: 5px;
+}
+
+#instruction-modal strong {
+    color: var(--highlight);
+}
+
+/* Close button for the modal */
+#instruction-close {
+    background-color: var(--close);
+    color: var(--text-static-light);
+    border: none;
+    padding: 10px 10px;
+    border-radius: 50%;
+    font-size: 1em;
+    cursor: pointer;
+    position: absolute;
+    transition: var(--transition03);
+    animation: slideIn 0.5s ease forwards;
+    z-index: 100;
+    right: 10px;
+    top: 5px;
+}
+
+#instruction-modal .btn-close:hover {
+    background-color: var(--close-hover);
+}
+
+.btn-instructions {
+    background-color: var(--hint);
+    color: var(--text);
+    border: none;
+    padding: 10.5px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: var(--transition03);
+    transition-property: var(--transition-colors);
+    font-size: 1rem;
+}
+
+.btn-instructions:hover {
+    background-color: var(--hint-hover);
+}
+
+/* Accordion Styles */
+
+.accordion-toggle {
+    background-color: var(--card);
+    color: var(--text);
+    text-align: left;
+    border: none;
+    display: block;
+    cursor: pointer;
+}
+
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    display: block;
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+    opacity: 0;
+}
+
+.accordion-content.expanded {
+    animation: expand 0.3s forwards;
+}
+
+.accordion-content.collapsed {
+    animation: collapse 0.3s forwards;
+}
+
+.arrow {
+    border: solid var(--text);
+    border-width: 0 6px 6px 0;
+    display: inline-block;
+    padding: 6px;
+    transition: var(--transition03);
+    transition-property: var(--transition-all);
+  }
+
+.down {
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}
+
+#toolbar {
+    position: fixed;
+    bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: var(--card);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    border-radius: 12px;
+    margin-bottom: 20px;
+    gap: 20px;
+    z-index: 100;
+    transition: var(--transition03);
+    transition-property: var(--transition-colors);
+}
+
+@keyframes expand {
+    from {
+        max-height: 0;
+        opacity: 0;
+    }
+    to {
+        max-height: 500px;
+        opacity: 1;
+    }
+}
+
+@keyframes collapse {
+    from {
+        max-height: 500px;
+        opacity: 1;
+    }
+    to {
+        max-height: 0;
+        opacity: 0;
+    }
+}
+
+/* Dropdown container */
+#dropdown-container {
+    display: flex;
+    position: relative;
+    width: 100%;
+}
+
+.dropdown-toggle {
+    color: var(--text);
+    text-align: left;
+    border: none;
+    cursor: pointer;
+    font-size: 2.5em;
+    font-weight: bold;
+    appearance: none;
+    background: none;
+}
+
+.dropdown-content {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+    width: 100%;
+}
+
+.dropdown-content.expanded {
+    animation: expand 0.3s forwards;
+}
+
+.dropdown-content.collapsed {
+    animation: collapse 0.3s forwards;
+}
+
 
 /* Responsive styles for desktop */
 @media (min-width: 768px) {
@@ -572,11 +833,6 @@ h1 {
         justify-content: space-around;
     }
 
-    .button-group {
-        flex-direction: row;
-        justify-content: space-between;
-    }
-
     #mode-selector {
         flex-direction: row;
         justify-content: center;
@@ -593,5 +849,31 @@ h1 {
     }
     .btn {
         width: 50%;
+    }
+    #instruction-modal {
+        font-size: 1.2em;
+    }
+    
+    .accordion-toggle {
+        display: none;
+    }
+    .accordion-content {
+        display: block;
+        opacity: 1;
+        max-height: unset;
+    }
+    .dropdown-toggle {
+        display: none;
+    }
+    .dropdown-content {
+        display: flex;
+        flex-wrap: wrap;
+        opacity: 1;
+        max-height: unset;
+        gap: 20px;
+    }
+    #toolbar {
+        position: unset;
+        width: 100%;
     }
 }

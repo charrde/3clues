@@ -35,17 +35,67 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-	const themeToggle = document.getElementById('theme-toggle');
-	const storedTheme = localStorage.getItem('theme') || 'light';
-	document.documentElement.setAttribute('data-theme', storedTheme);
-	themeToggle.checked = storedTheme === 'dark';
+    const accordionToggle = document.querySelector('.accordion-toggle');
+    const accordionContent = document.querySelector('.accordion-content');
 
-	themeToggle.addEventListener('change', () => {
-		const newTheme = themeToggle.checked ? 'dark' : 'light';
-		document.documentElement.setAttribute('data-theme', newTheme);
-		localStorage.setItem('theme', newTheme);
-	});
+    accordionToggle.addEventListener('click', () => {
+        if (accordionContent.classList.contains('expanded')) {
+            accordionContent.classList.remove('expanded');
+            accordionContent.classList.add('collapsed');
+        } 
+        else {
+            accordionContent.classList.remove('collapsed');
+            accordionContent.classList.add('expanded');
+        }
+        accordionToggle.classList.toggle('active');
+    });
 
+    const themeToggle = document.getElementById('theme-toggle');
+    const storedTheme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', storedTheme);
+    themeToggle.checked = storedTheme === 'dark';
+
+    themeToggle.addEventListener('change', () => {
+        const newTheme = themeToggle.checked ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+    });
+
+    const dropdownToggle = document.querySelector('.dropdown-toggle');
+    const dropdownContent = document.querySelector('.dropdown-content');
+
+    dropdownToggle.addEventListener('click', () => {
+        if (dropdownContent.classList.contains('expanded')) {
+            dropdownContent.classList.remove('expanded');
+            dropdownContent.classList.add('collapsed');
+        } 
+        else {
+            dropdownContent.classList.remove('collapsed');
+            dropdownContent.classList.add('expanded');
+        }
+        dropdownToggle.classList.toggle('active');
+    });
+
+    // Show instructions modal
+    document.getElementById('instructions-btn').addEventListener('click', function () {
+        document.getElementById('instruction-modal-overlay').style.display = 'flex';
+    });
+
+    // Close instructions modal
+    document.getElementById('instruction-close').addEventListener('click', function () {
+        document.getElementById('instruction-modal-overlay').style.display = 'none';
+    });
+
+    window.addEventListener('resize', function () {
+        const dropdownContent = document.querySelector('.dropdown-content');
+        if (window.innerWidth > 768) {
+            dropdownContent.classList.remove('expanded');
+            dropdownContent.classList.remove('collapsed');
+            const accordionContent = document.querySelector('.accordion-content');
+            accordionContent.classList.remove('expanded');
+            accordionContent.classList.remove('collapsed');
+        }
+    });
 });
 
 function startGame() {
@@ -62,10 +112,11 @@ function startGame() {
 
     if (currentMode === 'daily') {
         startDailyGame();
-    } 
+    }
     else {
         startPracticeGame();
     }
+    generateAndDisplayClues();
 }
 
 function startDailyGame() {
@@ -76,15 +127,7 @@ function startDailyGame() {
     } 
     else {
         resetGameState();
-
-        // Select a game data based on a consistent method using the current date so that it's the same for all players.
-        const seedDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-        const seed = seedDate.getTime();
-        const dayIndex = Math.floor((seed / 86400000)) % gameData.length;
-        currentGame = gameData[dayIndex];
-
-        displayClues();
-
+        generateAndDisplayClues();
         localStorage.setItem('lastPlayed', today.toDateString());
         localStorage.removeItem('gameState');
     }
@@ -92,42 +135,57 @@ function startDailyGame() {
 
 function startPracticeGame() {
     resetGameState();
-    const randomIndex = Math.floor(Math.random() * gameData.length);
-    currentGame = gameData[randomIndex];
-    displayClues();
+    generateAndDisplayClues();
+}
+
+function generateGuessTile() {
+    const guessIndex = totalAttempts - attemptsLeft + 1;
+    const guessTile = document.createElement('div');
+    guessTile.classList.add('guess-tile');
+    guessTile.setAttribute('id', `guess${guessIndex}`);
+    document.getElementById('guess-history').appendChild(guessTile);
 }
 
 function resetGameState() {
+    // Reset game variables
     attemptsLeft = totalAttempts;
     hintUsed = false;
     categoryRevealed = false;
     gameWon = false;
     hintsUsedCount = 0;
+    scoreIncrease = 0;
 
-    // Only reset scoreIncrease if starting a new game, not when loading a saved game
-    if (currentMode !== 'daily' || !localStorage.getItem('gameState')) {
-        scoreIncrease = 0;
-    }
+    // Clear UI elements
+    document.getElementById('guess-history').innerHTML = ''; // Clearing the guess tiles
+    document.getElementById('message').innerText = ''; // Clearing any game messages
+    document.getElementById('attempts').innerText = ''; // Resetting the attempts left display
+    document.getElementById('hint').innerText = ''; // Clearing any displayed hints
+    document.getElementById('category').innerText = ''; // Clearing the category information
+    document.getElementById('guess-input').value = ''; // Clearing the input field
+    document.getElementById('guess-input').disabled = false; // Enabling the input field
 
-    document.getElementById('message').innerText = '';
-    document.getElementById('attempts').innerText = '';
-    document.getElementById('hint').innerText = '';
-    document.getElementById('category').innerText = '';
-    document.getElementById('guess-input').value = '';
-    document.getElementById('guess-input').disabled = false;
+    // Re-enable any buttons that may have been disabled
     document.querySelector('.btn-submit').disabled = false;
     document.querySelector('.btn-hint').disabled = false;
     document.querySelector('.btn-category').disabled = false;
-
-    // Reset guess history tiles
-    for (let i = 1; i <= totalAttempts; i++) {
-        const guessTile = document.getElementById(`guess${i}`);
-        guessTile.className = 'guess-tile';
-        guessTile.innerHTML = '';
-    }
 }
 
-function displayClues() {
+
+
+function generateAndDisplayClues() {
+    if (currentMode === 'daily') {
+        // Generate daily game clues
+        const seedDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        const seed = seedDate.getTime();
+        const dayIndex = Math.floor((seed / 86400000)) % gameData.length;
+        currentGame = gameData[dayIndex];
+    } else {
+        // Generate practice game clues
+        const randomIndex = Math.floor(Math.random() * gameData.length);
+        currentGame = gameData[randomIndex];
+    }
+    
+    // Display clues in the UI
     document.getElementById('clue1').innerText = currentGame.clues[0];
     document.getElementById('clue2').innerText = currentGame.clues[1];
     document.getElementById('clue3').innerText = currentGame.clues[2];
@@ -141,65 +199,45 @@ function submitGuess() {
         return;
     }
 
+    generateGuessTile();
+
     const guessIndex = totalAttempts - attemptsLeft + 1;
     const guessTile = document.getElementById(`guess${guessIndex}`);
-
-    // Create icon element
     const icon = document.createElement('div');
     icon.classList.add('icon');
-
-    // Create text element
     const guessText = document.createElement('div');
     guessText.classList.add('guess-text');
     guessText.innerText = userGuess;
+
+    guessTile.appendChild(icon);
+    guessTile.appendChild(guessText);
 
     if (userGuess.toLowerCase() === currentGame.answer.toLowerCase()) {
         guessTile.classList.add('correct');
         icon.innerText = '✔';
         document.getElementById('message').style.color = '#44bd32';
-        document.getElementById('message').innerText = '';
-        document.getElementById('attempts').innerText = '';
+        document.getElementById('message').innerText = "Correct! Well done.";
         gameWon = true;
-
-        // Append icon and text to guess tile
-        guessTile.appendChild(icon);
-        guessTile.appendChild(guessText);
-
         if (currentMode === 'daily') {
             updateScore();
-            saveGameState();
         }
-        endGame();
     } else {
         guessTile.classList.add('incorrect');
         icon.innerText = '✖';
         attemptsLeft--;
-        if (attemptsLeft > 0) {
-            document.getElementById('message').style.color = '#e84118';
-            document.getElementById('message').innerText = '❌ Incorrect guess. Try again!';
-            document.getElementById('attempts').innerText = `Attempts left: ${attemptsLeft}`;
-        } 
-        else {
-            document.getElementById('message').style.color = '#e84118';
-            document.getElementById('message').innerText = `🚫 Game Over! The correct answer was "${currentGame.answer}".`;
-            document.getElementById('attempts').innerText = '';
-            if (currentMode === 'daily') {
-                resetStreak();
-                saveGameState();
-            }
-            endGame();
-        }
-
-        // Append icon and text to guess tile
-        guessTile.appendChild(icon);
-        guessTile.appendChild(guessText);
-
-        if (currentMode === 'daily') {
-            saveGameState();
-        }
+        document.getElementById('message').style.color = '#e84118';
+        document.getElementById('message').innerText = 'Incorrect guess. Try again!';
+        document.getElementById('attempts').innerText = `Attempts left: ${attemptsLeft}`;
     }
 
-    // Clear input field
+    if (currentMode === 'daily') {
+        saveGameState();
+    }
+
+    if (attemptsLeft === 0 || gameWon) {
+        endGame();
+    }
+
     document.getElementById('guess-input').value = '';
 }
 
@@ -214,7 +252,7 @@ function showHint() {
             saveGameState();
         }
         document.getElementById('lifetime-hints-used').innerText = lifetimeHintsUsed;
-    } 
+    }
     else {
         alert('You have already used the hint for this round.');
     }
@@ -231,7 +269,7 @@ function revealCategory() {
             saveGameState();
         }
         document.getElementById('lifetime-hints-used').innerText = lifetimeHintsUsed;
-    } 
+    }
     else {
         alert('The category is already revealed.');
     }
@@ -243,19 +281,16 @@ function endGame() {
     document.querySelector('.btn-hint').disabled = true;
     document.querySelector('.btn-category').disabled = true;
 
-    // Ensure clues, hint, and category are displayed after game over
-    displayClues();
-
     if (hintUsed) {
         document.getElementById('hint').innerText = `💡 Hint: ${currentGame.hint}`;
     }
 
     if (categoryRevealed) {
         document.getElementById('category').innerText = `Category: ${currentGame.category}`;
-    } 
-    else {
-        // Reveal category automatically at the end of the game
-        document.getElementById('category').innerText = `Category: ${currentGame.category}`;
+    }
+
+    if (currentMode === 'daily') {
+        saveGameState();
     }
 
     if (currentMode === 'practice') {
@@ -268,12 +303,13 @@ function endGame() {
     }
 }
 
+
 function updateScore() {
     // Calculate score based on attempts left and hints used
     scoreIncrease = (attemptsLeft * 10) - (hintsUsedCount * 5); // Deduct 5 points per hint used
     if (scoreIncrease < 0) scoreIncrease = 0; // Ensure score doesn't go negative
-    currentScore = parseInt(currentScore) + scoreIncrease;
-    streak = parseInt(streak) + 1;
+    currentScore += scoreIncrease; // Increment current score
+    streak++; // Increment streak
 
     // Update high score if necessary
     if (currentScore > highScore) {
@@ -281,15 +317,16 @@ function updateScore() {
         localStorage.setItem('highScore', highScore);
     }
 
-    // Update scoreboard
+    // Update DOM
     document.getElementById('current-score').innerText = currentScore;
     document.getElementById('high-score').innerText = highScore;
     document.getElementById('streak').innerText = streak;
 
     // Save to localStorage
-    localStorage.setItem('currentScore', currentScore);
-    localStorage.setItem('streak', streak);
+    localStorage.setItem('currentScore', currentScore.toString());
+    localStorage.setItem('streak', streak.toString());
 }
+
 
 function resetStreak() {
     streak = 0;
@@ -308,26 +345,23 @@ function showModal() {
 
     document.getElementById('modal-overlay').style.display = 'flex';
 
-    document.getElementById('modal-word').innerText = `The word was: ${currentGame.answer} 🎯`;
+    document.getElementById('modal-word').innerHTML = `The word was: <span>${currentGame.answer}</span> 🎯`;
     if (gameWon) {
-        document.getElementById('modal-hints-used').innerText = `You used ${hintsUsedCount} hints. 🧠`;
-        document.getElementById('modal-score-gained').innerText = `${scoreIncrease} points gained! 🎉`;
-        document.getElementById('modal-streak').innerText = `You're on a ${streak} ${streak === 1 ? 'day' : 'days'} streak! 🌟`;
-    }
-    else {
+        document.getElementById('modal-hints-used').innerHTML = `You used <span>${hintsUsedCount}</span> hints. 🧠`;
+        document.getElementById('modal-score-gained').innerHTML = `<span>${scoreIncrease}</span> points gained! 🎉`;
+        document.getElementById('modal-streak').innerHTML = `You're on a <span>${streak}</span> ${streak === 1 ? 'day' : 'days'} streak! 🌟`;
+    } else {
         document.getElementById('modal-score-gained').innerText = `Better luck next time!`;
         document.getElementById('modal-streak').innerText = `Your streak has been reset.`;
     }
-    document.getElementById('modal-highscore').innerText = `High Score: ${currentScore}`;
+    document.getElementById('modal-highscore').innerHTML = `High Score: <span>${currentScore}</span>`;
     document.getElementById('modal-title').innerText = gameWon ? 'Woohoo! 🎉' : 'Game Over!';
 }
 
 
+
 function closeModal() {
     document.getElementById('modal-overlay').style.display = 'none';
-    if (currentMode === 'practice') {
-        startPracticeGame();
-    }
 }
 
 function saveGameState() {
@@ -342,90 +376,90 @@ function saveGameState() {
         message: document.getElementById('message').innerText,
     };
 
-    for (let i = 1; i <= totalAttempts; i++) {
+    const currentGuessCount = totalAttempts - attemptsLeft + 1;
+    for (let i = 1; i <= currentGuessCount; i++) {
         const guessTile = document.getElementById(`guess${i}`);
-        const iconElement = guessTile.querySelector('.icon');
-        const guessTextElement = guessTile.querySelector('.guess-text');
-
-        gameState.guessHistory.push({
-            className: guessTile.className,
-            icon: iconElement ? iconElement.innerText : '',
-            guessText: guessTextElement ? guessTextElement.innerText : '',
-        });
+        if (guessTile) {
+            const iconElement = guessTile.querySelector('.icon');
+            const guessTextElement = guessTile.querySelector('.guess-text');
+            gameState.guessHistory.push({
+                className: guessTile.className,
+                icon: iconElement ? iconElement.innerText : '',
+                guessText: guessTextElement ? guessTextElement.innerText : '',
+            });
+        }
     }
-
     localStorage.setItem('gameState', JSON.stringify(gameState));
 }
 
+
+
 function loadSavedGame() {
-	const seedDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-	const seed = seedDate.getTime();
-	const dayIndex = Math.floor((seed / 86400000)) % gameData.length;
-	currentGame = gameData[dayIndex];
+    const seedDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const seed = seedDate.getTime();
+    const dayIndex = Math.floor((seed / 86400000)) % gameData.length;
+    currentGame = gameData[dayIndex];
 
-	displayClues();
+    const savedState = JSON.parse(localStorage.getItem('gameState'));
+    if (savedState) {
+        attemptsLeft = savedState.attemptsLeft;
+        hintUsed = savedState.hintUsed;
+        categoryRevealed = savedState.categoryRevealed;
+        gameWon = savedState.gameWon;
+        hintsUsedCount = savedState.hintsUsedCount || 0;
+        scoreIncrease = savedState.scoreIncrease || 0;
 
-	const savedState = JSON.parse(localStorage.getItem('gameState'));
-	if (savedState) {
-		attemptsLeft = savedState.attemptsLeft;
-		hintUsed = savedState.hintUsed;
-		categoryRevealed = savedState.categoryRevealed;
-		gameWon = savedState.gameWon;
-		hintsUsedCount = savedState.hintsUsedCount || 0;
-		scoreIncrease = savedState.scoreIncrease || 0;
+        document.getElementById('guess-history').innerHTML = '';
 
-		for (let i = 1; i <= totalAttempts; i++) {
-			const guessTile = document.getElementById(`guess${i}`);
-			const guessData = savedState.guessHistory[i - 1];
-			guessTile.className = guessData.className;
-			guessTile.innerHTML = '';
+        // Recreate guess tiles from saved state
+        savedState.guessHistory.forEach((guessData, index) => {
+            const guessTile = document.createElement('div');
+            guessTile.id = `guess${index + 1}`;
+            document.getElementById('guess-history').appendChild(guessTile);
 
-			if (guessData.icon || guessData.guessText) {
-				const icon = document.createElement('div');
-				icon.classList.add('icon');
-				icon.innerText = guessData.icon;
+            const classes = guessData.className.split(' ');
+            classes.forEach(cls => {
+                guessTile.classList.add(cls); // Add each class individually to avoid DOMException
+            });
 
-				const guessText = document.createElement('div');
-				guessText.classList.add('guess-text');
-				guessText.innerText = guessData.guessText;
+            if (guessData.icon || guessData.guessText) {
+                const icon = document.createElement('div');
+                icon.classList.add('icon');
+                icon.innerText = guessData.icon;
 
-				guessTile.appendChild(icon);
-				guessTile.appendChild(guessText);
-			}
-		}
+                const guessText = document.createElement('div');
+                guessText.classList.add('guess-text');
+                guessText.innerText = guessData.guessText;
 
-		if (hintUsed) {
-			document.getElementById('hint').innerText = `💡 Hint: ${currentGame.hint}`;
-		}
-		if (categoryRevealed || gameWon) {
-			document.getElementById('category').innerText = `Category: ${currentGame.category}`;
-		}
+                guessTile.appendChild(icon);
+                guessTile.appendChild(guessText);
+            }
+        });
 
-		if (attemptsLeft === 0 || gameWon) {
-			endGame();
-		} 
+        if (hintUsed) {
+            document.getElementById('hint').innerText = `💡 Hint: ${currentGame.hint}`;
+        }
+        if (categoryRevealed || gameWon) {
+            document.getElementById('category').innerText = `Category: ${currentGame.category}`;
+        }
+
+        if (attemptsLeft === 0 || gameWon) {
+            endGame();
+        }
         else {
-			document.getElementById('message').innerText = savedState.message || '';
-			document.getElementById('attempts').innerText = `Attempts left: ${attemptsLeft}`;
-			document.getElementById('guess-input').disabled = false;
-			document.querySelector('.btn-submit').disabled = false;
-			document.querySelector('.btn-hint').disabled = false;
-			document.querySelector('.btn-category').disabled = false;
-		}
-	} 
-    else {
-		resetGameState();
-	}
-	currentScore = parseInt(localStorage.getItem('currentScore')) || 0;
-	highScore = parseInt(localStorage.getItem('highScore')) || 0;
-	streak = parseInt(localStorage.getItem('streak')) || 0;
-	lifetimeHintsUsed = parseInt(localStorage.getItem('lifetimeHintsUsed')) || 0;
-
-	document.getElementById('current-score').innerText = currentScore;
-	document.getElementById('high-score').innerText = highScore;
-	document.getElementById('streak').innerText = streak;
-	document.getElementById('lifetime-hints-used').innerText = lifetimeHintsUsed;
+            document.getElementById('message').innerText = savedState.message || '';
+            document.getElementById('attempts').innerText = `Attempts left: ${attemptsLeft}`;
+            document.getElementById('guess-input').disabled = false;
+            document.querySelector('.btn-submit').disabled = false;
+            document.querySelector('.btn-hint').disabled = false;
+            document.querySelector('.btn-category').disabled = false;
+        }
+    } else {
+        resetGameState();
+    }
 }
+
+
 
 
 function switchMode(mode) {
@@ -439,7 +473,7 @@ function switchMode(mode) {
     if (mode === 'daily') {
         document.getElementById('daily-mode-btn').classList.add('active');
         startGame();
-    } 
+    }
     else {
         document.getElementById('practice-mode-btn').classList.add('active');
         startGame();
