@@ -674,7 +674,7 @@ h1 {
     border: none;
     padding: 10px 10px;
     border-radius: 50%;
-    font-size: 1em;
+    font-size: 0.75em;
     cursor: pointer;
     position: absolute;
     transition: var(--transition03);
