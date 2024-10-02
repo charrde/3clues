@@ -78,6 +78,13 @@ document.addEventListener("DOMContentLoaded", function () {
         dropdownToggle.classList.toggle('active');
     });
 
+
+    //check if user has ever played the game before and show instructions modal if not
+    if (!localStorage.getItem('firstTime')) {
+        localStorage.setItem('firstTime', 'true');
+        document.getElementById('instruction-modal-overlay').style.display = 'flex';
+    }
+    
     // Show instructions modal
     document.getElementById('instructions-btn').addEventListener('click', function () {
         document.getElementById('instruction-modal-overlay').style.display = 'flex';
