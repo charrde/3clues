@@ -298,15 +298,16 @@ function endGame() {
         document.getElementById('category').innerText = `Category: ${currentGame.category}`;
     }
 
-    if (currentMode === 'daily') {
-        saveGameState();
-    }
-
     if (currentMode === 'practice') {
+        //if the last guess was correct ? guess was correct : guess was incorrect
+        document.getElementById('message').style.color = gameWon ? '#44bd32' : '#e84118';
+        document.getElementById('message').innerHTML = gameWon 
+        ? `Woohoo! The correct answer was: <strong>${currentGame.answer}</strong>` 
+        : `Better luck next time! The correct answer was: <strong>${currentGame.answer}</strong>`;
         setTimeout(() => {
             startPracticeGame();
-        }, 1000);
-    }
+        }, 3000);
+    } 
     else {
         showModal();
     }
