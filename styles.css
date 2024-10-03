@@ -23,6 +23,7 @@
     --box: #F1F2F3;
     --success: #19A700;
     --option: #F6B3A2;
+    --option-hover: #f3a08f;
     --warning: #A31300;
     --fail: #930700;
     --submit: #9CCEA0;
@@ -50,6 +51,7 @@
     --box: #1e1e1e;
     --success: #0C5300;
     --option: #4B1414;
+    --option-hover: #3f0f0f;
     --warning: #FF806F;
     --fail: #930700;
     --submit: #0C4E00;
@@ -311,13 +313,30 @@ h1 {
     background-color: var(--submit);
     color: var(--text);
     transition: background-color 0.3s ease;
-    margin-bottom: 15px;
     transition: var(--transition03);
     transition-property: var(--transition-colors);
 }
 
 .btn-submit:hover {
     background-color: var(--submit-hover);
+}
+
+.btn-skip {
+    width: 50%;
+    padding: 15px;
+    font-size: 1em;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: var(--option);
+    color: var(--text);
+    transition: background-color 0.3s ease;
+    transition: var(--transition03);
+    transition-property: var(--transition-colors);
+}
+
+.btn-skip:hover {
+    background-color: var(--option-hover);
 }
 
 /* Hint and Category Buttons */
