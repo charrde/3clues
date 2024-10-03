@@ -120,7 +120,6 @@ function startGame() {
     document.getElementById('high-score').innerText = highScore;
     document.getElementById('streak').innerText = streak;
     document.getElementById('lifetime-hints-used').innerText = lifetimeHintsUsed;
-    document.querySelector('#guess-input').focus();
 
     if (currentMode === 'daily') {
         startDailyGame();
@@ -175,6 +174,7 @@ function resetGameState() {
     document.getElementById('category').innerText = ''; // Clearing the category information
     document.getElementById('guess-input').value = ''; // Clearing the input field
     document.getElementById('guess-input').disabled = false; // Enabling the input field
+    document.querySelector('#guess-input').focus();
 
     // Re-enable any buttons that may have been disabled
     document.querySelector('.btn-submit').disabled = false;
