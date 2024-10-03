@@ -120,6 +120,7 @@ function startGame() {
     document.getElementById('high-score').innerText = highScore;
     document.getElementById('streak').innerText = streak;
     document.getElementById('lifetime-hints-used').innerText = lifetimeHintsUsed;
+    document.querySelector('#guess-input').focus();
 
     if (currentMode === 'daily') {
         startDailyGame();
