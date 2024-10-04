@@ -1,4 +1,4 @@
-const gameData = [
+export const gameData = [
     {
         category: "Technology",
         clues: ["Search", "Browser", "Ads"],

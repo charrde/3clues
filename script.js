@@ -28,7 +28,6 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelector('#daily-mode-btn').addEventListener('click', () => switchMode('daily'));
     document.querySelector('#practice-mode-btn').addEventListener('click', () => switchMode('practice'));
     document.querySelector('.btn-skip').addEventListener('click', endGame);
-    document.querySelector('.btn-skip').style.display = 'none';
 
     // event listener for 'Enter' key press on the guess input
     document.querySelector('#guess-input').addEventListener('keydown', function (event) {
@@ -122,9 +121,11 @@ function startGame() {
     document.getElementById('lifetime-hints-used').innerText = lifetimeHintsUsed;
 
     if (currentMode === 'daily') {
+        document.querySelector('.btn-skip').innerHTML = 'Give Up';
         startDailyGame();
     }
     else {
+        document.querySelector('.btn-skip').innerHTML = 'Skip';
         startPracticeGame();
     }
     generateAndDisplayClues();
@@ -234,7 +235,8 @@ function submitGuess() {
         if (currentMode === 'daily') {
             updateScore();
         }
-    } else {
+    } 
+    else {
         guessTile.classList.add('incorrect');
         icon.innerText = '✖';
         attemptsLeft--;
@@ -488,12 +490,10 @@ function switchMode(mode) {
 
     if (mode === 'daily') {
         document.getElementById('daily-mode-btn').classList.add('active');
-        document.querySelector('.btn-skip').style.display = 'none';
         startGame();
     }
     else {
         document.getElementById('practice-mode-btn').classList.add('active');
-        document.querySelector('.btn-skip').style.display = 'unset';
         startGame();
     }
 }

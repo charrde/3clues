@@ -1,0 +1,13 @@
+{
+  "name": "3clues",
+  "version": "1.0.0",
+  "description": "A fun word game where you're given three clues and you have to guess what it is!",
+  "main": "js/main.js",
+  "scripts": {
+  },
+  "author": "Patrick Skinner",
+  "license": "ISC",
+  "dependencies": {
+    "toastr": "^2.1.4"
+  }
+}
