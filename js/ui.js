@@ -1,6 +1,7 @@
 import { MESSAGE_TYPES, THEMES, STORAGE_KEYS, MAX_ATTEMPTS } from './constants.js';
 import { Storage } from './storage.js';
 import JSConfetti from 'js-confetti';
+import Snackbar from 'node-snackbar';
 
 export class UI {
 
@@ -185,7 +186,6 @@ export class UI {
     }
 
     displayMessage(message, type) {
-        this.messageEl.innerText = message;
         switch (type) {
             case MESSAGE_TYPES.SUCCESS:
                 this.messageEl.style.color = '#44bd32';
@@ -202,6 +202,7 @@ export class UI {
             default:
                 this.messageEl.style.color = '#000';
         }
+        this.messageEl.innerText = message;
     }
 
     updateAttemptsLeft(attemptsLeft) {
@@ -240,19 +241,15 @@ export class UI {
     showToast(message, type = MESSAGE_TYPES.INFO) {
         switch (type) {
             case MESSAGE_TYPES.SUCCESS:
-                toastr["success"](message);
                 break;
             case MESSAGE_TYPES.ERROR:
-                toastr["error"](message);
                 break;
             case MESSAGE_TYPES.INFO:
-                toastr["info"](message);
                 break;
             case MESSAGE_TYPES.WARNING:
-                toastr["warning"](message);
                 break;
             default:
-                toastr.info(message);
+                break;
         }
     }
 }

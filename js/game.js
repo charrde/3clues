@@ -86,7 +86,7 @@ export class Game {
         if (this.currentMode === GAME_MODES.DAILY) {
             document.querySelector('.btn-skip').innerHTML = 'Give Up';
             this.startDailyGame();
-        } 
+        }
         else {
             document.querySelector('.btn-skip').innerHTML = 'Skip';
             this.startPracticeGame();
@@ -153,7 +153,7 @@ export class Game {
             document.getElementById('daily-mode-btn').classList.add('active');
             document.querySelector('.btn-skip').innerHTML = 'Give Up';
             this.startGame();
-        } 
+        }
         else {
             document.getElementById('practice-mode-btn').classList.add('active');
             document.querySelector('.btn-skip').innerHTML = 'Skip';
@@ -161,22 +161,63 @@ export class Game {
         }
     }
 
+
+    /*** Game State Management - Practice Mode ***/
+    initializePracticeModeOrder() {
+        const shuffledOrder = this.shuffleArray([...Array(this.gameData.length).keys()]);
+        Storage.set(STORAGE_KEYS.PRACTICE_GAME_ORDER, shuffledOrder);
+        Storage.set(STORAGE_KEYS.PRACTICE_GAME_INDEX, 0);
+    }
+
+    /**
+     * @param {Array} array
+     * @returns {Array}
+     */
+
+    shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    startPracticeGame() {
+        let shuffledOrder = Storage.get(STORAGE_KEYS.PRACTICE_GAME_ORDER, null);
+        let currentIndex = parseInt(Storage.get(STORAGE_KEYS.PRACTICE_GAME_INDEX, 0));
+
+        // If no order exists or all games have been played, initialize/reset the order
+        if (!shuffledOrder || currentIndex >= shuffledOrder.length) {
+            this.initializePracticeModeOrder();
+            shuffledOrder = Storage.get(STORAGE_KEYS.PRACTICE_GAME_ORDER, []);
+            currentIndex = 0;
+        }
+
+        // Get the game index for the current practice session
+        const gameIndex = shuffledOrder[currentIndex];
+        this.currentGame = this.gameData[gameIndex];
+
+        // Increment the current index and update storage
+        currentIndex++;
+        Storage.set(STORAGE_KEYS.PRACTICE_GAME_INDEX, currentIndex);
+
+        // Reset game state and display clues
+        this.resetGameState();
+        this.generateAndDisplayClues();
+    }
+
     /*** Game State Management ***/
+
     startDailyGame() {
         if (this.lastPlayed === this.todayDateString) {
             this.loadSavedGame();
-        } 
+        }
         else {
             this.resetGameState();
             this.generateAndDisplayClues();
             Storage.set(STORAGE_KEYS.LAST_PLAYED, this.todayDateString);
             Storage.remove(STORAGE_KEYS.GAME_STATE);
         }
-    }
-
-    startPracticeGame() {
-        this.resetGameState();
-        this.generateAndDisplayClues();
     }
 
     resetGameState() {
@@ -200,7 +241,7 @@ export class Game {
     generateAndDisplayClues() {
         if (this.currentMode === GAME_MODES.DAILY) {
             this.currentGame = this.generateDailyGame();
-        } 
+        }
         else {
             this.currentGame = this.generatePracticeGame();
         }
@@ -230,7 +271,6 @@ export class Game {
             hintsUsedCount: this.hintsUsedCount,
             scoreIncrease: this.scoreIncrease,
             guessHistory: this.getGuessHistory(),
-            message: this.ui.messageEl.innerText,
         };
 
         Storage.set(STORAGE_KEYS.GAME_STATE, gameState);
@@ -257,13 +297,13 @@ export class Game {
 
             if (this.attemptsLeft === 0 || this.gameWon) {
                 this.endGame();
-            } 
+            }
             else {
                 this.ui.displayMessage(savedState.message || '', MESSAGE_TYPES.INFO);
                 this.ui.updateAttemptsLeft(this.attemptsLeft);
                 this.ui.enableInputs();
             }
-        } 
+        }
         else {
             this.resetGameState();
         }
@@ -322,7 +362,7 @@ export class Game {
 
         if (userGuess.toLowerCase() === this.currentGame.answer.toLowerCase()) {
             this.handleCorrectGuess();
-        } 
+        }
         else {
             this.handleIncorrectGuess();
         }
@@ -373,7 +413,7 @@ export class Game {
                 Storage.set(STORAGE_KEYS.LIFETIME_HINTS, this.lifetimeHintsUsed);
                 this.saveGameState();
             }
-        } 
+        }
         else {
             this.ui.showToast('You have already used the hint for this round.', MESSAGE_TYPES.INFO);
         }
@@ -395,7 +435,7 @@ export class Game {
                 Storage.set(STORAGE_KEYS.LIFETIME_HINTS, this.lifetimeHintsUsed);
                 this.saveGameState();
             }
-        } 
+        }
         else {
             this.ui.showToast('The category is already revealed.', MESSAGE_TYPES.INFO);
         }
@@ -414,7 +454,7 @@ export class Game {
             setTimeout(() => {
                 this.startPracticeGame();
             }, 3000);
-        } 
+        }
         else {
             this.showModal();
         }

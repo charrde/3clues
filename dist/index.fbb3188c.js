@@ -584,13 +584,19 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 }
 
 },{}],"bDbGG":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 var _gameJs = require("./game.js");
 var _gameDataJs = require("./gameData.js");
+var _nodeSnackbar = require("node-snackbar");
+var _nodeSnackbarDefault = parcelHelpers.interopDefault(_nodeSnackbar);
 document.addEventListener("DOMContentLoaded", ()=>{
     const game = new (0, _gameJs.Game)((0, _gameDataJs.gameData));
+    (0, _nodeSnackbarDefault.default).show({
+        text: "Example notification text."
+    });
 });
 
-},{"./game.js":"cMznl","./gameData.js":"KS5VT"}],"cMznl":[function(require,module,exports) {
+},{"./game.js":"cMznl","./gameData.js":"KS5VT","node-snackbar":"lW2Ov","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"cMznl":[function(require,module,exports) {
 // game.js
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
@@ -717,6 +723,45 @@ class Game {
             this.startGame();
         }
     }
+    /*** Game State Management - Practice Mode ***/ initializePracticeModeOrder() {
+        const shuffledOrder = this.shuffleArray([
+            ...Array(this.gameData.length).keys()
+        ]);
+        (0, _storageJs.Storage).set((0, _constantsJs.STORAGE_KEYS).PRACTICE_GAME_ORDER, shuffledOrder);
+        (0, _storageJs.Storage).set((0, _constantsJs.STORAGE_KEYS).PRACTICE_GAME_INDEX, 0);
+    }
+    /**
+     * @param {Array} array
+     * @returns {Array}
+     */ shuffleArray(array) {
+        for(let i = array.length - 1; i > 0; i--){
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [
+                array[j],
+                array[i]
+            ];
+        }
+        return array;
+    }
+    startPracticeGame() {
+        let shuffledOrder = (0, _storageJs.Storage).get((0, _constantsJs.STORAGE_KEYS).PRACTICE_GAME_ORDER, null);
+        let currentIndex = parseInt((0, _storageJs.Storage).get((0, _constantsJs.STORAGE_KEYS).PRACTICE_GAME_INDEX, 0));
+        // If no order exists or all games have been played, initialize/reset the order
+        if (!shuffledOrder || currentIndex >= shuffledOrder.length) {
+            this.initializePracticeModeOrder();
+            shuffledOrder = (0, _storageJs.Storage).get((0, _constantsJs.STORAGE_KEYS).PRACTICE_GAME_ORDER, []);
+            currentIndex = 0;
+        }
+        // Get the game index for the current practice session
+        const gameIndex = shuffledOrder[currentIndex];
+        this.currentGame = this.gameData[gameIndex];
+        // Increment the current index and update storage
+        currentIndex++;
+        (0, _storageJs.Storage).set((0, _constantsJs.STORAGE_KEYS).PRACTICE_GAME_INDEX, currentIndex);
+        // Reset game state and display clues
+        this.resetGameState();
+        this.generateAndDisplayClues();
+    }
     /*** Game State Management ***/ startDailyGame() {
         if (this.lastPlayed === this.todayDateString) this.loadSavedGame();
         else {
@@ -725,10 +770,6 @@ class Game {
             (0, _storageJs.Storage).set((0, _constantsJs.STORAGE_KEYS).LAST_PLAYED, this.todayDateString);
             (0, _storageJs.Storage).remove((0, _constantsJs.STORAGE_KEYS).GAME_STATE);
         }
-    }
-    startPracticeGame() {
-        this.resetGameState();
-        this.generateAndDisplayClues();
     }
     resetGameState() {
         this.attemptsLeft = (0, _constantsJs.MAX_ATTEMPTS);
@@ -770,8 +811,7 @@ class Game {
             gameWon: this.gameWon,
             hintsUsedCount: this.hintsUsedCount,
             scoreIncrease: this.scoreIncrease,
-            guessHistory: this.getGuessHistory(),
-            message: this.ui.messageEl.innerText
+            guessHistory: this.getGuessHistory()
         };
         (0, _storageJs.Storage).set((0, _constantsJs.STORAGE_KEYS).GAME_STATE, gameState);
     }
@@ -947,7 +987,9 @@ const STORAGE_KEYS = {
     LAST_PLAYED: "lastPlayed",
     GAME_STATE: "gameState",
     THEME: "theme",
-    FIRST_TIME: "firstTime"
+    FIRST_TIME: "firstTime",
+    PRACTICE_GAME_ORDER: "practiceGameOrder",
+    PRACTICE_GAME_INDEX: "practiceGameIndex"
 };
 const THEMES = {
     DARK: "dark",
@@ -1025,6 +1067,8 @@ var _constantsJs = require("./constants.js");
 var _storageJs = require("./storage.js");
 var _jsConfetti = require("js-confetti");
 var _jsConfettiDefault = parcelHelpers.interopDefault(_jsConfetti);
+var _nodeSnackbar = require("node-snackbar");
+var _nodeSnackbarDefault = parcelHelpers.interopDefault(_nodeSnackbar);
 class UI {
     constructor(game){
         this.game = game;
@@ -1175,7 +1219,6 @@ class UI {
         this.guessHistory.appendChild(guessTile);
     }
     displayMessage(message, type) {
-        this.messageEl.innerText = message;
         switch(type){
             case (0, _constantsJs.MESSAGE_TYPES).SUCCESS:
                 this.messageEl.style.color = "#44bd32";
@@ -1192,6 +1235,7 @@ class UI {
             default:
                 this.messageEl.style.color = "#000";
         }
+        this.messageEl.innerText = message;
     }
     updateAttemptsLeft(attemptsLeft) {
         this.attemptsEl.innerText = `Attempts left: ${attemptsLeft}`;
@@ -1223,24 +1267,22 @@ class UI {
     showToast(message, type = (0, _constantsJs.MESSAGE_TYPES).INFO) {
         switch(type){
             case (0, _constantsJs.MESSAGE_TYPES).SUCCESS:
-                toastr["success"](message);
                 break;
             case (0, _constantsJs.MESSAGE_TYPES).ERROR:
-                toastr["error"](message);
+                alert(message);
                 break;
             case (0, _constantsJs.MESSAGE_TYPES).INFO:
-                toastr["info"](message);
                 break;
             case (0, _constantsJs.MESSAGE_TYPES).WARNING:
-                toastr["warning"](message);
+                alert(message);
                 break;
             default:
-                toastr.info(message);
+                alert(message);
         }
     }
 }
 
-},{"./constants.js":"1j8D1","./storage.js":"j1l1C","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","js-confetti":"gZbVi"}],"gZbVi":[function(require,module,exports) {
+},{"./constants.js":"1j8D1","./storage.js":"j1l1C","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","js-confetti":"gZbVi","node-snackbar":"lW2Ov"}],"gZbVi":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 function _classCallCheck(instance, Constructor) {
@@ -1597,7 +1639,145 @@ var JSConfetti = /*#__PURE__*/ function() {
 }();
 exports.default = JSConfetti;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"KS5VT":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"lW2Ov":[function(require,module,exports) {
+/*!
+ * Snackbar v0.1.14
+ * http://polonel.com/Snackbar
+ *
+ * Copyright 2018 Chris Brame and other contributors
+ * Released under the MIT license
+ * https://github.com/polonel/Snackbar/blob/master/LICENSE
+ */ (function(root, factory) {
+    "use strict";
+    if (typeof define === "function" && define.amd) define([], function() {
+        return root.Snackbar = factory();
+    });
+    else if (0, module.exports) module.exports = root.Snackbar = factory();
+    else root.Snackbar = factory();
+})(this, function() {
+    var Snackbar = {};
+    Snackbar.current = null;
+    var $defaults = {
+        text: "Default Text",
+        textColor: "#FFFFFF",
+        width: "auto",
+        showAction: true,
+        actionText: "Dismiss",
+        actionTextAria: "Dismiss, Description for Screen Readers",
+        alertScreenReader: false,
+        actionTextColor: "#4CAF50",
+        showSecondButton: false,
+        secondButtonText: "",
+        secondButtonAria: "Description for Screen Readers",
+        secondButtonTextColor: "#4CAF50",
+        backgroundColor: "#323232",
+        pos: "bottom-left",
+        duration: 5000,
+        customClass: "",
+        onActionClick: function(element) {
+            element.style.opacity = 0;
+        },
+        onSecondButtonClick: function(element) {},
+        onClose: function(element) {}
+    };
+    Snackbar.show = function($options) {
+        var options = Extend(true, $defaults, $options);
+        if (Snackbar.current) {
+            Snackbar.current.style.opacity = 0;
+            setTimeout((function() {
+                var $parent = this.parentElement;
+                if ($parent) // possible null if too many/fast Snackbars
+                $parent.removeChild(this);
+            }).bind(Snackbar.current), 500);
+        }
+        Snackbar.snackbar = document.createElement("div");
+        Snackbar.snackbar.className = "snackbar-container " + options.customClass;
+        Snackbar.snackbar.style.width = options.width;
+        var $p = document.createElement("p");
+        $p.style.margin = 0;
+        $p.style.padding = 0;
+        $p.style.color = options.textColor;
+        $p.style.fontSize = "14px";
+        $p.style.fontWeight = 300;
+        $p.style.lineHeight = "1em";
+        $p.innerHTML = options.text;
+        Snackbar.snackbar.appendChild($p);
+        Snackbar.snackbar.style.background = options.backgroundColor;
+        if (options.showSecondButton) {
+            var secondButton = document.createElement("button");
+            secondButton.className = "action";
+            secondButton.innerHTML = options.secondButtonText;
+            secondButton.setAttribute("aria-label", options.secondButtonAria);
+            secondButton.style.color = options.secondButtonTextColor;
+            secondButton.addEventListener("click", function() {
+                options.onSecondButtonClick(Snackbar.snackbar);
+            });
+            Snackbar.snackbar.appendChild(secondButton);
+        }
+        if (options.showAction) {
+            var actionButton = document.createElement("button");
+            actionButton.className = "action";
+            actionButton.innerHTML = options.actionText;
+            actionButton.setAttribute("aria-label", options.actionTextAria);
+            actionButton.style.color = options.actionTextColor;
+            actionButton.addEventListener("click", function() {
+                options.onActionClick(Snackbar.snackbar);
+            });
+            Snackbar.snackbar.appendChild(actionButton);
+        }
+        if (options.duration) setTimeout((function() {
+            if (Snackbar.current === this) {
+                Snackbar.current.style.opacity = 0;
+                // When natural remove event occurs let's move the snackbar to its origins
+                Snackbar.current.style.top = "-100px";
+                Snackbar.current.style.bottom = "-100px";
+            }
+        }).bind(Snackbar.snackbar), options.duration);
+        if (options.alertScreenReader) Snackbar.snackbar.setAttribute("role", "alert");
+        Snackbar.snackbar.addEventListener("transitionend", (function(event, elapsed) {
+            if (event.propertyName === "opacity" && this.style.opacity === "0") {
+                if (typeof options.onClose === "function") options.onClose(this);
+                this.parentElement.removeChild(this);
+                if (Snackbar.current === this) Snackbar.current = null;
+            }
+        }).bind(Snackbar.snackbar));
+        Snackbar.current = Snackbar.snackbar;
+        document.body.appendChild(Snackbar.snackbar);
+        var $bottom = getComputedStyle(Snackbar.snackbar).bottom;
+        var $top = getComputedStyle(Snackbar.snackbar).top;
+        Snackbar.snackbar.style.opacity = 1;
+        Snackbar.snackbar.className = "snackbar-container " + options.customClass + " snackbar-pos " + options.pos;
+    };
+    Snackbar.close = function() {
+        if (Snackbar.current) Snackbar.current.style.opacity = 0;
+    };
+    // Pure JS Extend
+    // http://gomakethings.com/vanilla-javascript-version-of-jquery-extend/
+    var Extend = function() {
+        var extended = {};
+        var deep = false;
+        var i = 0;
+        var length = arguments.length;
+        if (Object.prototype.toString.call(arguments[0]) === "[object Boolean]") {
+            deep = arguments[0];
+            i++;
+        }
+        var merge = function(obj) {
+            for(var prop in obj)if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+                if (deep && Object.prototype.toString.call(obj[prop]) === "[object Object]") extended[prop] = Extend(true, extended[prop], obj[prop]);
+                else extended[prop] = obj[prop];
+            }
+        };
+        for(; i < length; i++){
+            var obj = arguments[i];
+            merge(obj);
+        }
+        return extended;
+    };
+    return Snackbar;
+});
+
+},{}],"KS5VT":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "gameData", ()=>gameData);

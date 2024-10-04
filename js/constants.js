@@ -14,6 +14,8 @@ export const STORAGE_KEYS = {
     GAME_STATE: 'gameState',
     THEME: 'theme',
     FIRST_TIME: 'firstTime',
+    PRACTICE_GAME_ORDER: 'practiceGameOrder',
+    PRACTICE_GAME_INDEX: 'practiceGameIndex',
 };
 
 export const THEMES = {
