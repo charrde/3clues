@@ -86,14 +86,26 @@ export class UI {
     }
 
     toggleAccordion() {
-        this.accordionContent.classList.toggle('expanded');
-        this.accordionContent.classList.toggle('collapsed');
+        if (this.accordionContent.classList.contains('expanded')) {
+            this.accordionContent.classList.remove('expanded');
+            this.accordionContent.classList.add('collapsed');
+        } 
+        else {
+            this.accordionContent.classList.remove('collapsed');
+            this.accordionContent.classList.add('expanded');
+        }
         this.accordionToggle.classList.toggle('active');
     }
 
     toggleDropdown() {
-        this.dropdownContent.classList.toggle('expanded');
-        this.dropdownContent.classList.toggle('collapsed');
+        if (this.dropdownContent.classList.contains('expanded')) {
+            this.dropdownContent.classList.remove('expanded');
+            this.dropdownContent.classList.add('collapsed');
+        } 
+        else {
+            this.dropdownContent.classList.remove('collapsed');
+            this.dropdownContent.classList.add('expanded');
+        }
         this.dropdownToggle.classList.toggle('active');
     }
 
