@@ -1,7 +1,6 @@
 import { MESSAGE_TYPES, THEMES, STORAGE_KEYS, MAX_ATTEMPTS } from './constants.js';
 import { Storage } from './storage.js';
 import JSConfetti from 'js-confetti';
-import Snackbar from 'node-snackbar';
 
 export class UI {
 
