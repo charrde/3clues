@@ -2,7 +2,6 @@
   "name": "3clues",
   "version": "1.0.0",
   "description": "A fun word game where you're given three clues and you have to guess what it is!",
-  "main": "js/main.js",
   "source": "index.html",
   "scripts": {
     "start": "parcel",
