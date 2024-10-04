@@ -496,6 +496,7 @@ h1 {
     align-items: center;
     justify-content: center;
     z-index: 1000;
+    animation: slideIn 0.5s ease forwards;
     transition: var(--transition03);
     transition-property: var(--transition-colors);
 }
@@ -641,6 +642,8 @@ h1 {
     animation: slideIn 0.5s ease forwards;
     padding-top: 50px;
     width: 100%;
+    transition: var(--transition03);
+    transition-property: var(--transition-colors);
 }
 
 #instruction-modal-wrapper {
@@ -841,6 +844,10 @@ h1 {
 
 .dropdown-content.collapsed {
     animation: collapse 0.3s forwards;
+}
+
+#confetti {
+    position: absolute;
 }
 
 

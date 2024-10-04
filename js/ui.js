@@ -1,9 +1,9 @@
-// ui.js
-
 import { MESSAGE_TYPES, THEMES, STORAGE_KEYS, MAX_ATTEMPTS } from './constants.js';
 import { Storage } from './storage.js';
+import JSConfetti from 'js-confetti';
 
 export class UI {
+
     constructor(game) {
         this.game = game;
         this.bindElements();
@@ -115,6 +115,8 @@ export class UI {
     }
 
     showModal(modalData) {
+        const jsConfetti = new JSConfetti()
+        jsConfetti.addConfetti()
         this.modalOverlay.style.display = 'flex';
         this.modalWord.innerHTML = `The word was: <span>${modalData.answer}</span> 🎯`;
 
@@ -172,7 +174,7 @@ export class UI {
         if (isCorrect) {
             guessTile.classList.add('correct');
             this.displayMessage('Correct! Well done.', MESSAGE_TYPES.SUCCESS);
-        } 
+        }
         else {
             guessTile.classList.add('incorrect');
             this.displayMessage('Incorrect guess. Try again!', MESSAGE_TYPES.ERROR);
@@ -236,25 +238,18 @@ export class UI {
     }
 
     showToast(message, type = MESSAGE_TYPES.INFO) {
-        toastr.options = {
-            "closeButton": true,
-            "progressBar": true,
-            "positionClass": "toast-top-right",
-            "timeOut": "3000",
-        };
-    
         switch (type) {
             case MESSAGE_TYPES.SUCCESS:
-                toastr.success(message);
+                toastr["success"](message);
                 break;
             case MESSAGE_TYPES.ERROR:
-                toastr.error(message);
+                toastr["error"](message);
                 break;
             case MESSAGE_TYPES.INFO:
-                toastr.info(message);
+                toastr["info"](message);
                 break;
             case MESSAGE_TYPES.WARNING:
-                toastr.warning(message);
+                toastr["warning"](message);
                 break;
             default:
                 toastr.info(message);

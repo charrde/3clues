@@ -3,11 +3,18 @@
   "version": "1.0.0",
   "description": "A fun word game where you're given three clues and you have to guess what it is!",
   "main": "js/main.js",
+  "source": "index.html",
   "scripts": {
+    "start": "parcel",
+    "build": "parcel build"
   },
   "author": "Patrick Skinner",
   "license": "ISC",
   "dependencies": {
+    "js-confetti": "^0.12.0",
     "toastr": "^2.1.4"
+  },
+  "devDependencies": {
+    "parcel": "^2.12.0"
   }
 }

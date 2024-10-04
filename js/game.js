@@ -310,18 +310,15 @@ export class Game {
     /*** Guess Handling ***/
     submitGuess() {
         const userGuess = this.ui.guessInput.value.trim();
+        this.attemptsLeft--;
 
         if (userGuess.length === 0) {
             this.ui.showToast('Please enter a guess.', MESSAGE_TYPES.WARNING);
             return;
         }
-
         if (this.gameWon || this.attemptsLeft === 0) {
-            this.ui.showToast('The game has ended. Please start a new game.', MESSAGE_TYPES.INFO);
             return;
         }
-
-        this.attemptsLeft--;
 
         if (userGuess.toLowerCase() === this.currentGame.answer.toLowerCase()) {
             this.handleCorrectGuess();
@@ -329,6 +326,7 @@ export class Game {
         else {
             this.handleIncorrectGuess();
         }
+
         if (this.currentMode === GAME_MODES.DAILY) {
             this.saveGameState();
         }
@@ -423,8 +421,9 @@ export class Game {
     }
 
     handleGiveUp() {
+        this.attemptsLeft = 0;
+        this.ui.updateAttemptsLeft(this.attemptsLeft);
         if (this.currentMode === GAME_MODES.DAILY) {
-            this.attemptsLeft = 0;
             this.gameWon = false;
             this.resetStreak();
             this.saveGameState();
