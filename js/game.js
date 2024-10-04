@@ -221,6 +221,7 @@ export class Game {
     }
 
     saveGameState() {
+        console.log('saveGameState');
         const gameState = {
             attemptsLeft: this.attemptsLeft,
             hintUsed: this.hintUsed,
@@ -308,7 +309,6 @@ export class Game {
 
     /*** Guess Handling ***/
     submitGuess() {
-        console.log('submitGuess');
         const userGuess = this.ui.guessInput.value.trim();
 
         if (userGuess.length === 0) {
@@ -329,13 +329,8 @@ export class Game {
         else {
             this.handleIncorrectGuess();
         }
-
         if (this.currentMode === GAME_MODES.DAILY) {
             this.saveGameState();
-        }
-
-        if (this.attemptsLeft === 0 || this.gameWon) {
-            this.endGame();
         }
 
         this.ui.updateAttemptsLeft(this.attemptsLeft);
@@ -344,20 +339,22 @@ export class Game {
 
     handleCorrectGuess() {
         this.gameWon = true;
-        this.ui.displayMessage('Correct! Well done.', MESSAGE_TYPES.SUCCESS);
         this.ui.addGuessTile(this.ui.guessInput.value.trim(), true);
         if (this.currentMode === GAME_MODES.DAILY) {
             this.updateScore();
         }
+        this.endGame();
     }
 
     handleIncorrectGuess() {
         this.ui.addGuessTile(this.ui.guessInput.value.trim(), false);
         if (this.attemptsLeft > 0) {
             this.ui.displayMessage('Incorrect guess. Try again!', MESSAGE_TYPES.ERROR);
-        } 
+        }
         else {
             this.ui.displayMessage('No attempts left. Game Over!', MESSAGE_TYPES.ERROR);
+            this.endGame();
+            this.resetStreak();
         }
     }
 
@@ -366,16 +363,16 @@ export class Game {
         if (!this.hintUsed) {
             this.ui.displayHint(this.currentGame.hint);
             this.hintUsed = true;
-            this.hintsUsedCount++;
-            this.lifetimeHintsUsed++;
-            Storage.set(STORAGE_KEYS.LIFETIME_HINTS, this.lifetimeHintsUsed);
-            this.ui.updateScoreboard({
-                currentScore: this.currentScore,
-                highScore: this.highScore,
-                streak: this.streak,
-                lifetimeHintsUsed: this.lifetimeHintsUsed,
-            });
             if (this.currentMode === GAME_MODES.DAILY) {
+                this.hintsUsedCount++;
+                this.lifetimeHintsUsed++;
+                this.ui.updateScoreboard({
+                    currentScore: this.currentScore,
+                    highScore: this.highScore,
+                    streak: this.streak,
+                    lifetimeHintsUsed: this.lifetimeHintsUsed,
+                });
+                Storage.set(STORAGE_KEYS.LIFETIME_HINTS, this.lifetimeHintsUsed);
                 this.saveGameState();
             }
         } 
@@ -388,16 +385,16 @@ export class Game {
         if (!this.categoryRevealed) {
             this.ui.displayCategory(this.currentGame.category);
             this.categoryRevealed = true;
-            this.hintsUsedCount++;
-            this.lifetimeHintsUsed++;
-            Storage.set(STORAGE_KEYS.LIFETIME_HINTS, this.lifetimeHintsUsed);
-            this.ui.updateScoreboard({
-                currentScore: this.currentScore,
-                highScore: this.highScore,
-                streak: this.streak,
-                lifetimeHintsUsed: this.lifetimeHintsUsed,
-            });
             if (this.currentMode === GAME_MODES.DAILY) {
+                this.hintsUsedCount++;
+                this.lifetimeHintsUsed++;
+                this.ui.updateScoreboard({
+                    currentScore: this.currentScore,
+                    highScore: this.highScore,
+                    streak: this.streak,
+                    lifetimeHintsUsed: this.lifetimeHintsUsed,
+                });
+                Storage.set(STORAGE_KEYS.LIFETIME_HINTS, this.lifetimeHintsUsed);
                 this.saveGameState();
             }
         } 
@@ -429,6 +426,7 @@ export class Game {
         if (this.currentMode === GAME_MODES.DAILY) {
             this.attemptsLeft = 0;
             this.gameWon = false;
+            this.resetStreak();
             this.saveGameState();
         }
         this.endGame();
