@@ -348,10 +348,21 @@ export class Game {
     }
 
     /*** Guess Handling ***/
+    normalizeString(str) {
+        return str
+            .toLowerCase()
+            .normalize("NFD") // Normalize the string
+            .replace(/[\u0300-\u036f]/g, "") // Remove diacritics
+            .replace(/['’‘`´]/g, "") // Remove various apostrophe-like characters
+            .replace(/[.,!?;:-_&@#%*()\[\]{}<>~`\\/]/g, "") // Remove additional punctuation and symbols
+            .replace(/\s+/g, " ") // Replace multiple spaces with a single space
+            .trim(); // Remove leading and trailing spaces
+    }
+
     submitGuess() {
         const userGuess = this.ui.guessInput.value.trim();
         this.attemptsLeft--;
-
+    
         if (userGuess.length === 0) {
             this.ui.showToast('Please enter a guess.', MESSAGE_TYPES.WARNING);
             return;
@@ -360,20 +371,24 @@ export class Game {
             return;
         }
 
-        if (userGuess.toLowerCase() === this.currentGame.answer.toLowerCase()) {
+        const normalizedUserGuess = this.normalizeString(userGuess);
+        const normalizedAnswer = this.normalizeString(this.currentGame.answer);
+        console.log(normalizedUserGuess, normalizedAnswer);
+    
+        if (normalizedUserGuess === normalizedAnswer) {
             this.handleCorrectGuess();
-        }
-        else {
+        } else {
             this.handleIncorrectGuess();
         }
-
+    
         if (this.currentMode === GAME_MODES.DAILY) {
             this.saveGameState();
         }
-
+    
         this.ui.updateAttemptsLeft(this.attemptsLeft);
         this.ui.clearGuessInput();
     }
+    
 
     handleCorrectGuess() {
         this.gameWon = true;
