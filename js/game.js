@@ -22,23 +22,25 @@ export class Game {
         this.hintsUsedCount = 0;
         this.lifetimeHintsUsed = parseInt(Storage.get(STORAGE_KEYS.LIFETIME_HINTS, 0));
         this.scoreIncrease = 0;
-
+    
         this.currentScore = parseInt(Storage.get(STORAGE_KEYS.CURRENT_SCORE, 0));
         this.highScore = parseInt(Storage.get(STORAGE_KEYS.HIGH_SCORE, 0));
         this.streak = parseInt(Storage.get(STORAGE_KEYS.STREAK, 0));
-
-        const today = new Date();
+    
+        const now = new Date();
+        const localMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+        this.todayDateString = new Date(localMidnight).toDateString();
+    
         this.lastPlayed = Storage.get(STORAGE_KEYS.LAST_PLAYED, '');
-        this.todayDateString = today.toDateString();
-
+    
         this.currentGame = {};
-
+    
         // Bind UI event listeners
         this.bindUIActions();
-
+    
         // Check first-time user
         this.checkFirstTimeUser();
-
+    
         // Start the game
         this.startGame();
     }
@@ -250,9 +252,11 @@ export class Game {
     }
 
     generateDailyGame() {
-        const seedDate = new Date();
-        const seed = seedDate.getTime();
-        const dayIndex = Math.floor(seed / 86400000) % this.gameData.length;
+        const now = new Date();
+        // Create a Date object for local midnight
+        const localMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+        // Calculate the number of days since epoch based on local midnight
+        const dayIndex = Math.floor(localMidnight / 86400000) % this.gameData.length;
         return this.gameData[dayIndex];
     }
 
@@ -373,7 +377,6 @@ export class Game {
 
         const normalizedUserGuess = this.normalizeString(userGuess);
         const normalizedAnswer = this.normalizeString(this.currentGame.answer);
-        console.log(normalizedUserGuess, normalizedAnswer);
     
         if (normalizedUserGuess === normalizedAnswer) {
             this.handleCorrectGuess();
