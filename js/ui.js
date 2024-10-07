@@ -214,7 +214,7 @@ export class UI {
             default:
                 this.messageEl.style.color = '#000';
         }
-        this.messageEl.innerText = message;
+        this.messageEl.innerHTML = message;
     }
 
     updateAttemptsLeft(attemptsLeft) {

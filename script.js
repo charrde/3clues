@@ -324,7 +324,7 @@ function endGame() {
 function updateScore() {
     // Calculate score based on attempts left and hints used
     scoreIncrease = (attemptsLeft * 10) - (hintsUsedCount * 5); // Deduct 5 points per hint used
-    if (scoreIncrease < 0) scoreIncrease = 0; // Ensure score doesn't go negative
+    if (scoreIncrease < 5) scoreIncrease = 5; // Ensure score doesn't go negative
     currentScore += scoreIncrease; // Increment current score
     streak++; // Increment streak
 
