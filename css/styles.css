@@ -427,17 +427,20 @@ h1 {
     position: relative;
     transition: var(--transition03);
     transition-property: var(--transition-colors);
-
+    animation: fadeIn 0.5s forwards;
+    opacity: 0;
 }
 
 /* Correct and Incorrect Guess Tiles */
 .guess-tile.correct {
     background-color: var(--success);
     transform: scale(1.02);
+    opacity: 1;
 }
 
 .guess-tile.incorrect {
     background-color: var(--fail);
+    opacity: 1;
 }
 
 #answer-reveal {

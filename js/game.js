@@ -163,7 +163,6 @@ export class Game {
         }
     }
 
-
     /*** Game State Management - Practice Mode ***/
     initializePracticeModeOrder() {
         const shuffledOrder = this.shuffleArray([...Array(this.gameData.length).keys()]);
@@ -175,7 +174,6 @@ export class Game {
      * @param {Array} array
      * @returns {Array}
      */
-
     shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -198,6 +196,7 @@ export class Game {
         // Get the game index for the current practice session
         const gameIndex = shuffledOrder[currentIndex];
         this.currentGame = this.gameData[gameIndex];
+        this.currentGame.answers = Array.isArray(this.currentGame.answers) ? this.currentGame.answers : [this.currentGame.answers];
 
         // Increment the current index and update storage
         currentIndex++;
@@ -253,20 +252,21 @@ export class Game {
 
     generateDailyGame() {
         const now = new Date();
-        // Create a Date object for local midnight
         const localMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-        // Calculate the number of days since epoch based on local midnight
         const dayIndex = Math.floor(localMidnight / 86400000) % this.gameData.length;
-        return this.gameData[dayIndex];
+        const selectedGame = this.gameData[dayIndex];
+        selectedGame.answers = Array.isArray(selectedGame.answers) ? selectedGame.answers : [selectedGame.answers];
+        return selectedGame;
     }
 
     generatePracticeGame() {
         const randomIndex = Math.floor(Math.random() * this.gameData.length);
-        return this.gameData[randomIndex];
+        const selectedGame = this.gameData[randomIndex];
+        selectedGame.answers = Array.isArray(selectedGame.answers) ? selectedGame.answers : [selectedGame.answers];
+        return selectedGame;
     }
 
     saveGameState() {
-        console.log('saveGameState');
         const gameState = {
             attemptsLeft: this.attemptsLeft,
             hintUsed: this.hintUsed,
@@ -275,6 +275,7 @@ export class Game {
             hintsUsedCount: this.hintsUsedCount,
             scoreIncrease: this.scoreIncrease,
             guessHistory: this.getGuessHistory(),
+            answers: this.currentGame.answers,
         };
 
         Storage.set(STORAGE_KEYS.GAME_STATE, gameState);
@@ -290,6 +291,7 @@ export class Game {
             this.hintsUsedCount = savedState.hintsUsedCount || 0;
             this.scoreIncrease = savedState.scoreIncrease || 0;
             this.currentGame = this.generateDailyGame();
+            this.currentGame.answers = savedState.answers || this.currentGame.answers;
 
             this.restoreGuessHistory(savedState.guessHistory);
             if (this.hintUsed) {
@@ -316,7 +318,7 @@ export class Game {
     restoreGuessHistory(guessHistory) {
         guessHistory.forEach((guessData, index) => {
             const guessTile = document.createElement('div');
-            guessTile.className = guessData.className;
+            guessTile.className = `guess-tile ${guessData.className}`;
             guessTile.id = `guess${index + 1}`;
 
             if (guessData.icon || guessData.guessText) {
@@ -353,6 +355,10 @@ export class Game {
 
     /*** Guess Handling ***/
     normalizeString(str) {
+        if (typeof str !== 'string') {
+            console.error('normalizeString received a non-string value:', str);
+            return '';
+        }
         return str
             .toLowerCase()
             .normalize("NFD") // Normalize the string
@@ -365,20 +371,18 @@ export class Game {
 
     submitGuess() {
         const userGuess = this.ui.guessInput.value.trim();
-        this.attemptsLeft--;
-    
+        
         if (userGuess.length === 0) {
             this.ui.showToast('Please enter a guess.', MESSAGE_TYPES.WARNING);
             return;
         }
-        if (this.gameWon || this.attemptsLeft === 0) {
-            return;
-        }
-
-        const normalizedUserGuess = this.normalizeString(userGuess);
-        const normalizedAnswer = this.normalizeString(this.currentGame.answer);
     
-        if (normalizedUserGuess === normalizedAnswer) {
+        const normalizedUserGuess = this.normalizeString(userGuess);
+        const normalizedAnswers = this.currentGame.answers.map(answer => this.normalizeString(answer));
+
+        this.attemptsLeft--;
+
+        if (normalizedAnswers.includes(normalizedUserGuess)) {
             this.handleCorrectGuess();
         } else {
             this.handleIncorrectGuess();
@@ -391,7 +395,6 @@ export class Game {
         this.ui.updateAttemptsLeft(this.attemptsLeft);
         this.ui.clearGuessInput();
     }
-    
 
     handleCorrectGuess() {
         this.gameWon = true;
@@ -407,7 +410,7 @@ export class Game {
         if (this.attemptsLeft > 0) {
             this.ui.displayMessage('Incorrect guess. Try again!', MESSAGE_TYPES.ERROR);
         }
-        else {
+        if (this.attemptsLeft === 0) {
             this.ui.displayMessage('No attempts left. Game Over!', MESSAGE_TYPES.ERROR);
             this.endGame();
             this.resetStreak();
@@ -465,8 +468,8 @@ export class Game {
         if (this.currentMode === GAME_MODES.PRACTICE) {
             this.ui.displayMessage(
                 this.gameWon
-                    ? `Woohoo! The correct answer was: <strong>${this.currentGame.answer}</strong>`
-                    : `Better luck next time! The correct answer was: <strong>${this.currentGame.answer}</strong>`,
+                    ? `Woohoo! The correct answer was: <strong>${this.currentGame.answers[0]}</strong>`
+                    : `Better luck next time! The correct answer was: <strong>${this.currentGame.answers[0]}</strong>`,
                 this.gameWon ? MESSAGE_TYPES.SUCCESS : MESSAGE_TYPES.ERROR
             );
             setTimeout(() => {
@@ -494,7 +497,9 @@ export class Game {
 
         const modalData = {
             gameWon: this.gameWon,
-            answer: this.currentGame.answer,
+            answer: this.currentGame.answers[0],
+            hint: this.currentGame.hint,
+            category: this.currentGame.category,
             hintsUsedCount: this.hintsUsedCount,
             scoreIncrease: this.scoreIncrease,
             streak: this.streak,

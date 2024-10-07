@@ -9,6 +9,7 @@ export class UI {
         this.bindElements();
         this.attachEventListeners();
         this.initializeTheme();
+        this.jsConfetti = new JSConfetti();
     }
 
     bindElements() {
@@ -127,8 +128,7 @@ export class UI {
     }
 
     showModal(modalData) {
-        const jsConfetti = new JSConfetti()
-        jsConfetti.addConfetti()
+        
         this.modalOverlay.style.display = 'flex';
         this.modalWord.innerHTML = `The word was: <span>${modalData.answer}</span> 🎯`;
 
@@ -138,6 +138,7 @@ export class UI {
             this.modalStreak.innerHTML = `You're on a <span>${modalData.streak}</span> ${modalData.streak === 1 ? 'day' : 'days'} streak! 🌟`;
             this.modalTitle.innerText = 'Woohoo! 🎉';
             this.modalMessage.innerText = 'Come back tomorrow for another puzzle!';
+            this.jsConfetti.addConfetti()
         } else {
             this.modalHintsUsed.innerHTML = '';
             this.modalScoreGained.innerText = 'Better luck next time!';
