@@ -23,18 +23,14 @@ export class Game {
         const isAuthenticated = await this.checkAuthentication();
 
         if (isAuthenticated) {
-            // Fetch user data from the server
             await this.loadUserData();
         } else {
-            // Load data from localStorage
             this.loadLocalData();
         }
 
-        // Proceed with game initialization
         this.bindUIActions();
         this.checkFirstTimeUser();
 
-        // Start the game
         this.startGame();
     }
 
@@ -62,7 +58,6 @@ export class Game {
     }
 
     async loadUserData() {
-        // Fetch game data from the server
         try {
             const response = await fetch(`${API_BASE_URL}/game-data`, {
                 method: 'GET',
@@ -71,13 +66,11 @@ export class Game {
 
             if (response.ok) {
                 const data = await response.json();
-                // Load data into game state
                 this.currentScore = data.currentScore || 0;
                 this.highScore = data.highScore || 0;
                 this.streak = data.streak || 0;
                 this.lifetimeHintsUsed = data.lifetimeHintsUsed || 0;
             } else {
-                // Handle error
                 console.error('Failed to load user data.');
                 this.loadLocalData();
             }

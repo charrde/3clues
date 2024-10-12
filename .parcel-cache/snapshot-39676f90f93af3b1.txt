@@ -16,7 +16,7 @@
 67C:\GH\Personal\3clues\node_modules\@parcel\resolver-default\LICENSE133724904457545650 0
 85C:\GH\Personal\3clues\node_modules\caniuse-lite\data\features\css-element-function.js133724904463308479 0
 45C:\GH\Personal\3clues\node_modules\source-map133724904459839501 1
-26C:\GH\Personal\3clues\dist133731660490052922 1
+26C:\GH\Personal\3clues\dist133731695405815446 1
 79C:\GH\Personal\3clues\node_modules\caniuse-lite\data\features\pointer-events.js133724904466367527 0
 83C:\GH\Personal\3clues\node_modules\@parcel\optimizer-htmlnano\node_modules\svgo\bin133724904457796101 1
 65C:\GH\Personal\3clues\node_modules\csso\node_modules\css-tree\cjs133724904462906600 1
@@ -73,7 +73,7 @@
 86C:\GH\Personal\3clues\node_modules\caniuse-lite\data\features\css-container-queries.js133724904463200555 0
 79C:\GH\Personal\3clues\node_modules\caniuse-lite\data\features\pagevisibility.js133724904466249580 0
 67C:\GH\Personal\3clues\node_modules\toastr\nuget\toastr.2.0.1.nuspec133724873978734877 0
-48C:\GH\Personal\3clues\dist\index.fbb3188c.js.map133731660489875345 0
+48C:\GH\Personal\3clues\dist\index.fbb3188c.js.map133731695405815446 0
 109C:\GH\Personal\3clues\node_modules\@parcel\optimizer-htmlnano\node_modules\css-tree\lib\syntax\node\Atrule.js133724904458628056 0
 88C:\GH\Personal\3clues\node_modules\@parcel\optimizer-htmlnano\node_modules\svgo\bin\svgo133724904457857209 0
 61C:\GH\Personal\3clues\node_modules\ordered-binary\.nyc_output133724904459028192 1
@@ -6184,9 +6184,9 @@
 62C:\GH\Personal\3clues\node_modules\.bin\update-browserslist-db133724904469219656 0
 66C:\GH\Personal\3clues\node_modules\.bin\update-browserslist-db.cmd133724904469209605 0
 37C:\GH\Personal\3clues\js\constants.js133731660664025076 0
-32C:\GH\Personal\3clues\js\game.js133731645980034923 0
+32C:\GH\Personal\3clues\js\game.js133731695405460289 0
 32C:\GH\Personal\3clues\js\main.js133731640335475423 0
 36C:\GH\Personal\3clues\img\3clues.svg133728132187188890 0
 36C:\GH\Personal\3clues\css\styles.css133731640151079809 0
 37C:\GH\Personal\3clues\dist\index.html133731660489514565 0
-44C:\GH\Personal\3clues\dist\index.fbb3188c.js133731660489855345 0
+44C:\GH\Personal\3clues\dist\index.fbb3188c.js133731695405795441 0
