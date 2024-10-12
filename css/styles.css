@@ -77,7 +77,7 @@ footer {
     color: var(--text);
     font-size: 1em;
     margin-top: 20px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
     transition: var(--transition03);
     transition-property: var(--transition-colors);
 }
@@ -135,20 +135,20 @@ footer {
 }
 
 .slider::before {
-	content: "🌙";
-	display: flex;
-	align-items: center;
-	justify-content: center;
+    content: "🌙";
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .slider::after {
-	content: "☀️";
-	display: flex;
-	align-items: center;
-	justify-content: center;
+    content: "☀️";
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.switch input:checked + .slider span {
+.switch input:checked+.slider span {
     transform: translateX(1.5em);
 }
 
@@ -209,7 +209,7 @@ body {
     background-color: var(--card);
     padding: 20px;
     border-radius: 12px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
     text-align: center;
     transition: var(--transition03);
     transition-property: var(--transition-colors);
@@ -218,11 +218,12 @@ body {
 
 /* Scoreboard Container */
 #scoreboard-container {
-    background-color: var(--card);;
+    background-color: var(--card);
+    ;
     padding: 20px;
     margin-top: 20px;
     border-radius: 12px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
     transition: var(--transition03);
     transition-property: var(--transition-colors);
 }
@@ -230,10 +231,11 @@ body {
 /* Guess History Container */
 #guess-history-container {
     width: 100%;
-    background-color: var(--card);;
+    background-color: var(--card);
+    ;
     padding: 20px;
     border-radius: 12px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
     transition: var(--transition03);
     transition-property: var(--transition-colors);
 }
@@ -396,13 +398,15 @@ h1 {
 }
 
 /* Disabled State */
-.btn:disabled, .btn-submit:disabled {
+.btn:disabled,
+.btn-submit:disabled {
     background-color: var(--disabled);
     cursor: not-allowed;
 }
 
 /* Hint and Category Style */
-#hint, #category {
+#hint,
+#category {
     margin-top: 15px;
     font-style: italic;
     color: var(--highlight);
@@ -444,10 +448,10 @@ h1 {
 }
 
 #answer-reveal {
-	text-align: center;
-	font-size: 1.2em;
-	color: #44bd32;
-	margin-top: 20px;
+    text-align: center;
+    font-size: 1.2em;
+    color: #44bd32;
+    margin-top: 20px;
 }
 
 /* Icons */
@@ -474,7 +478,7 @@ h1 {
     transition-property: var(--transition-colors);
 }
 
-#scoreboard > div {
+#scoreboard>div {
     background-color: var(--box);
     padding: 10px;
     border-radius: 8px;
@@ -492,7 +496,7 @@ h1 {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.8);
+    background: rgba(0, 0, 0, 0.8);
     display: none;
     align-items: center;
     justify-content: center;
@@ -509,7 +513,7 @@ h1 {
     text-align: center;
     max-width: 500px;
     width: 90%;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     transition: var(--transition03);
     transition-property: var(--transition-colors);
 }
@@ -519,6 +523,7 @@ h1 {
         transform: translateY(-50px);
         opacity: 0;
     }
+
     to {
         transform: translateY(0);
         opacity: 1;
@@ -536,6 +541,7 @@ h1 {
     from {
         text-shadow: 0 0 5px var(--hint);
     }
+
     to {
         text-shadow: 0 0 10px var(--hint);
     }
@@ -660,6 +666,7 @@ h1 {
         opacity: 0;
         transform: translateY(-50px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -680,7 +687,8 @@ h1 {
     font-size: 1.6em;
 }
 
-#instruction-modal p, #instruction-modal ul {
+#instruction-modal p,
+#instruction-modal ul {
     margin-bottom: 10px;
 }
 
@@ -768,7 +776,7 @@ h1 {
     padding: 6px;
     transition: var(--transition03);
     transition-property: var(--transition-all);
-  }
+}
 
 .down {
     transform: rotate(45deg);
@@ -783,7 +791,7 @@ h1 {
     align-items: center;
     padding: 10px 20px;
     background-color: var(--card);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
     border-radius: 12px;
     gap: 20px;
     z-index: 100;
@@ -796,6 +804,7 @@ h1 {
         max-height: 0;
         opacity: 0;
     }
+
     to {
         max-height: 500px;
         opacity: 1;
@@ -807,6 +816,7 @@ h1 {
         max-height: 500px;
         opacity: 1;
     }
+
     to {
         max-height: 0;
         opacity: 0;
@@ -851,6 +861,79 @@ h1 {
     position: absolute;
 }
 
+/* Authentication Modal Styles */
+#auth-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+#auth-modal {
+    background-color: var(--card);
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    width: 300px;
+}
+
+#auth-form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+#auth-submit {
+    width: 100%;
+    padding: 10px;
+}
+
+#logout-btn {
+    margin-left: 10px;
+}
+
+#profile-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+#profile-modal {
+    background-color: var(--card);
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    width: 300px;
+}
+
+#profile-modal p {
+    margin-bottom: 10px;
+}
+
+#user-auth {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+#logout-btn,
+#profile-btn {
+    margin-left: 10px;
+}
+
 
 /* Responsive styles for desktop */
 @media (min-width: 768px) {
@@ -884,27 +967,32 @@ h1 {
         margin-bottom: 0;
     }
 
-    #scoreboard > div {
+    #scoreboard>div {
         width: calc(50% - 10px);
     }
+
     .btn {
         width: 50%;
     }
+
     #instruction-modal {
         font-size: 1.2em;
     }
-    
+
     .accordion-toggle {
         display: none;
     }
+
     .accordion-content {
         display: block;
         opacity: 1;
         max-height: unset;
     }
+
     .dropdown-toggle {
         display: none;
     }
+
     .dropdown-content {
         display: flex;
         flex-wrap: wrap;
@@ -912,6 +1000,7 @@ h1 {
         max-height: unset;
         gap: 20px;
     }
+
     #toolbar {
         position: unset;
         width: 100%;
