@@ -4,7 +4,6 @@ export const GAME_MODES = {
 };
 
 export const MAX_ATTEMPTS = 5;
-export const API_BASE_URL = 'https://api.3clues.ca';
 
 export const STORAGE_KEYS = {
     CURRENT_SCORE: 'currentScore',

@@ -1,131 +1,48 @@
 // game.js
 
-import {
-    GAME_MODES,
-    MAX_ATTEMPTS,
-    STORAGE_KEYS,
-    MESSAGE_TYPES,
-    API_BASE_URL,
-} from './constants.js';
+import { GAME_MODES, MAX_ATTEMPTS, STORAGE_KEYS, MESSAGE_TYPES } from './constants.js';
 import { Storage } from './storage.js';
 import { UI } from './ui.js';
 
 export class Game {
     constructor(gameData) {
-        this.gameData = gameData;
+        this.gameData = gameData; // Array of game objects
         this.ui = new UI(this);
         this.initializeGame();
-        this.currentMode = GAME_MODES.DAILY;
     }
 
     /*** Initialization ***/
-    async initializeGame() {
-        // Check if user is authenticated
-        const isAuthenticated = await this.checkAuthentication();
-
-        if (isAuthenticated) {
-            await this.loadUserData();
-        } else {
-            this.loadLocalData();
-        }
-
-        this.bindUIActions();
-        this.checkFirstTimeUser();
-
-        this.startGame();
-    }
-
-    async checkAuthentication() {
-        try {
-            const response = await fetch(`${API_BASE_URL}/me`, {
-                method: 'GET',
-                credentials: 'include',
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                this.username = data.username;
-                this.isAuthenticated = true;
-                return true;
-            } else {
-                this.isAuthenticated = false;
-                return false;
-            }
-        } catch (error) {
-            console.error('Authentication check failed:', error);
-            this.isAuthenticated = false;
-            return false;
-        }
-    }
-
-    async loadUserData() {
-        try {
-            const response = await fetch(`${API_BASE_URL}/game-data`, {
-                method: 'GET',
-                credentials: 'include',
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                this.currentScore = data.currentScore || 0;
-                this.highScore = data.highScore || 0;
-                this.streak = data.streak || 0;
-                this.lifetimeHintsUsed = data.lifetimeHintsUsed || 0;
-            } else {
-                console.error('Failed to load user data.');
-                this.loadLocalData();
-            }
-        } catch (error) {
-            console.error('Error loading user data:', error);
-            this.loadLocalData();
-        }
-    }
-
-    loadLocalData() {
-        // Load data from localStorage
+    initializeGame() {
+        // Initialize game state from storage or set defaults
+        this.currentMode = GAME_MODES.DAILY;
+        this.attemptsLeft = MAX_ATTEMPTS;
+        this.hintUsed = false;
+        this.categoryRevealed = false;
+        this.gameWon = false;
+        this.hintsUsedCount = 0;
+        this.lifetimeHintsUsed = parseInt(Storage.get(STORAGE_KEYS.LIFETIME_HINTS, 0));
+        this.scoreIncrease = 0;
+    
         this.currentScore = parseInt(Storage.get(STORAGE_KEYS.CURRENT_SCORE, 0));
         this.highScore = parseInt(Storage.get(STORAGE_KEYS.HIGH_SCORE, 0));
         this.streak = parseInt(Storage.get(STORAGE_KEYS.STREAK, 0));
-        this.lifetimeHintsUsed = parseInt(Storage.get(STORAGE_KEYS.LIFETIME_HINTS, 0));
-    }
-
-    resetToLocalData() {
-        this.loadLocalData();
-        this.isAuthenticated = false;
-    }
-
-    async saveGameData() {
-        if (this.isAuthenticated) {
-            const gameData = {
-                currentScore: this.currentScore,
-                highScore: this.highScore,
-                streak: this.streak,
-                lifetimeHintsUsed: this.lifetimeHintsUsed,
-            };
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/game-data`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    credentials: 'include',
-                    body: JSON.stringify(gameData),
-                });
-
-                if (!response.ok) {
-                    console.error('Failed to save game data.');
-                }
-            } catch (error) {
-                console.error('Error saving game data:', error);
-            }
-        } else {
-            // Save to localStorage
-            Storage.set(STORAGE_KEYS.CURRENT_SCORE, this.currentScore);
-            Storage.set(STORAGE_KEYS.HIGH_SCORE, this.highScore);
-            Storage.set(STORAGE_KEYS.STREAK, this.streak);
-            Storage.set(STORAGE_KEYS.LIFETIME_HINTS, this.lifetimeHintsUsed);
-        }
+    
+        const now = new Date();
+        const localMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+        this.todayDateString = new Date(localMidnight).toDateString();
+    
+        this.lastPlayed = Storage.get(STORAGE_KEYS.LAST_PLAYED, '');
+    
+        this.currentGame = {};
+    
+        // Bind UI event listeners
+        this.bindUIActions();
+    
+        // Check first-time user
+        this.checkFirstTimeUser();
+    
+        // Start the game
+        this.startGame();
     }
 
     /*** UI Binding ***/
@@ -171,7 +88,8 @@ export class Game {
         if (this.currentMode === GAME_MODES.DAILY) {
             document.querySelector('.btn-skip').innerHTML = 'Give Up';
             this.startDailyGame();
-        } else {
+        }
+        else {
             document.querySelector('.btn-skip').innerHTML = 'Skip';
             this.startPracticeGame();
         }
@@ -190,13 +108,10 @@ export class Game {
     }
 
     updateScore() {
-        this.scoreIncrease = (this.attemptsLeft + 1) * 10 - this.hintsUsedCount * 5;
+        this.scoreIncrease = ((this.attemptsLeft + 1) * 10) - (this.hintsUsedCount * 5);
         this.scoreIncrease = Math.max(this.scoreIncrease, 0);
         this.currentScore += this.scoreIncrease;
-
-        if (this.currentMode === GAME_MODES.DAILY) {
-            this.streak++;
-        }
+        this.streak++;
 
         if (this.currentScore > this.highScore) {
             this.highScore = this.currentScore;
@@ -210,14 +125,12 @@ export class Game {
             lifetimeHintsUsed: this.lifetimeHintsUsed,
         });
 
-        this.saveGameData();
+        Storage.set(STORAGE_KEYS.CURRENT_SCORE, this.currentScore);
+        Storage.set(STORAGE_KEYS.STREAK, this.streak);
     }
 
     resetStreak() {
-        if (this.currentMode === GAME_MODES.DAILY) {
-            this.streak = 0;
-            Storage.set(STORAGE_KEYS.STREAK, this.streak);
-        }
+        this.streak = 0;
         this.currentScore = 0;
         this.scoreIncrease = 0;
         this.ui.updateScoreboard({
@@ -226,7 +139,8 @@ export class Game {
             streak: this.streak,
             lifetimeHintsUsed: this.lifetimeHintsUsed,
         });
-        this.saveGameData();
+        Storage.set(STORAGE_KEYS.STREAK, this.streak);
+        Storage.set(STORAGE_KEYS.CURRENT_SCORE, this.currentScore);
     }
 
     /*** Game Mode Management ***/
@@ -241,7 +155,8 @@ export class Game {
             document.getElementById('daily-mode-btn').classList.add('active');
             document.querySelector('.btn-skip').innerHTML = 'Give Up';
             this.startGame();
-        } else {
+        }
+        else {
             document.getElementById('practice-mode-btn').classList.add('active');
             document.querySelector('.btn-skip').innerHTML = 'Skip';
             this.startGame();
@@ -295,15 +210,10 @@ export class Game {
     /*** Game State Management ***/
 
     startDailyGame() {
-        const now = new Date();
-        const localMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-        this.todayDateString = new Date(localMidnight).toDateString();
-
-        this.lastPlayed = Storage.get(STORAGE_KEYS.LAST_PLAYED, '');
-
         if (this.lastPlayed === this.todayDateString) {
             this.loadSavedGame();
-        } else {
+        }
+        else {
             this.resetGameState();
             this.generateAndDisplayClues();
             Storage.set(STORAGE_KEYS.LAST_PLAYED, this.todayDateString);
@@ -332,7 +242,8 @@ export class Game {
     generateAndDisplayClues() {
         if (this.currentMode === GAME_MODES.DAILY) {
             this.currentGame = this.generateDailyGame();
-        } else {
+        }
+        else {
             this.currentGame = this.generatePracticeGame();
         }
 
@@ -351,17 +262,11 @@ export class Game {
     generatePracticeGame() {
         const randomIndex = Math.floor(Math.random() * this.gameData.length);
         const selectedGame = this.gameData[randomIndex];
-        selectedGame.answers = Array.isArray(selectedGame.answers) ? this.normalizeAnswers(selectedGame.answers) : [this.normalizeString(selectedGame.answers)];
+        selectedGame.answers = Array.isArray(selectedGame.answers) ? selectedGame.answers : [selectedGame.answers];
         return selectedGame;
     }
 
-    normalizeAnswers(answers) {
-        return answers.map(answer => this.normalizeString(answer));
-    }
-
     saveGameState() {
-        if (this.currentMode !== GAME_MODES.DAILY) return;
-
         const gameState = {
             attemptsLeft: this.attemptsLeft,
             hintUsed: this.hintUsed,
@@ -398,12 +303,14 @@ export class Game {
 
             if (this.attemptsLeft === 0 || this.gameWon) {
                 this.endGame();
-            } else {
+            }
+            else {
                 this.ui.displayMessage(savedState.message || '', MESSAGE_TYPES.INFO);
                 this.ui.updateAttemptsLeft(this.attemptsLeft);
                 this.ui.enableInputs();
             }
-        } else {
+        }
+        else {
             this.resetGameState();
         }
     }
@@ -464,12 +371,12 @@ export class Game {
 
     submitGuess() {
         const userGuess = this.ui.guessInput.value.trim();
-
+        
         if (userGuess.length === 0) {
             this.ui.showToast('Please enter a guess.', MESSAGE_TYPES.WARNING);
             return;
         }
-
+    
         const normalizedUserGuess = this.normalizeString(userGuess);
         const normalizedAnswers = this.currentGame.answers.map(answer => this.normalizeString(answer));
 
@@ -480,11 +387,11 @@ export class Game {
         } else {
             this.handleIncorrectGuess();
         }
-
+    
         if (this.currentMode === GAME_MODES.DAILY) {
             this.saveGameState();
         }
-
+    
         this.ui.updateAttemptsLeft(this.attemptsLeft);
         this.ui.clearGuessInput();
     }
@@ -515,11 +422,20 @@ export class Game {
         if (!this.hintUsed) {
             this.ui.displayHint(this.currentGame.hint);
             this.hintUsed = true;
-            this.hintsUsedCount++;
-            this.lifetimeHintsUsed++;
-            this.updateScoreboard();
-            this.saveGameData();
-        } else {
+            if (this.currentMode === GAME_MODES.DAILY) {
+                this.hintsUsedCount++;
+                this.lifetimeHintsUsed++;
+                this.ui.updateScoreboard({
+                    currentScore: this.currentScore,
+                    highScore: this.highScore,
+                    streak: this.streak,
+                    lifetimeHintsUsed: this.lifetimeHintsUsed,
+                });
+                Storage.set(STORAGE_KEYS.LIFETIME_HINTS, this.lifetimeHintsUsed);
+                this.saveGameState();
+            }
+        }
+        else {
             this.ui.showToast('You have already used the hint for this round.', MESSAGE_TYPES.INFO);
         }
     }
@@ -528,11 +444,20 @@ export class Game {
         if (!this.categoryRevealed) {
             this.ui.displayCategory(this.currentGame.category);
             this.categoryRevealed = true;
-            this.hintsUsedCount++;
-            this.lifetimeHintsUsed++;
-            this.updateScoreboard();
-            this.saveGameData();
-        } else {
+            if (this.currentMode === GAME_MODES.DAILY) {
+                this.hintsUsedCount++;
+                this.lifetimeHintsUsed++;
+                this.ui.updateScoreboard({
+                    currentScore: this.currentScore,
+                    highScore: this.highScore,
+                    streak: this.streak,
+                    lifetimeHintsUsed: this.lifetimeHintsUsed,
+                });
+                Storage.set(STORAGE_KEYS.LIFETIME_HINTS, this.lifetimeHintsUsed);
+                this.saveGameState();
+            }
+        }
+        else {
             this.ui.showToast('The category is already revealed.', MESSAGE_TYPES.INFO);
         }
     }
@@ -540,7 +465,6 @@ export class Game {
     /*** Game End Handling ***/
     endGame() {
         this.ui.disableInputs();
-        this.saveGameData();
         if (this.currentMode === GAME_MODES.PRACTICE) {
             this.ui.displayMessage(
                 this.gameWon
@@ -551,7 +475,8 @@ export class Game {
             setTimeout(() => {
                 this.startPracticeGame();
             }, 3000);
-        } else {
+        }
+        else {
             this.showModal();
         }
     }
@@ -562,7 +487,7 @@ export class Game {
         if (this.currentMode === GAME_MODES.DAILY) {
             this.gameWon = false;
             this.resetStreak();
-            this.saveGameData();
+            this.saveGameState();
         }
         this.endGame();
     }

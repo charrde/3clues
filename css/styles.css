@@ -77,7 +77,7 @@ footer {
     color: var(--text);
     font-size: 1em;
     margin-top: 20px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
     transition: var(--transition03);
     transition-property: var(--transition-colors);
 }
@@ -135,20 +135,20 @@ footer {
 }
 
 .slider::before {
-    content: "🌙";
-    display: flex;
-    align-items: center;
-    justify-content: center;
+	content: "🌙";
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .slider::after {
-    content: "☀️";
-    display: flex;
-    align-items: center;
-    justify-content: center;
+	content: "☀️";
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
-.switch input:checked+.slider span {
+.switch input:checked + .slider span {
     transform: translateX(1.5em);
 }
 
@@ -209,7 +209,7 @@ body {
     background-color: var(--card);
     padding: 20px;
     border-radius: 12px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
     text-align: center;
     transition: var(--transition03);
     transition-property: var(--transition-colors);
@@ -218,12 +218,11 @@ body {
 
 /* Scoreboard Container */
 #scoreboard-container {
-    background-color: var(--card);
-    ;
+    background-color: var(--card);;
     padding: 20px;
     margin-top: 20px;
     border-radius: 12px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
     transition: var(--transition03);
     transition-property: var(--transition-colors);
 }
@@ -231,11 +230,10 @@ body {
 /* Guess History Container */
 #guess-history-container {
     width: 100%;
-    background-color: var(--card);
-    ;
+    background-color: var(--card);;
     padding: 20px;
     border-radius: 12px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
     transition: var(--transition03);
     transition-property: var(--transition-colors);
 }
@@ -398,15 +396,13 @@ h1 {
 }
 
 /* Disabled State */
-.btn:disabled,
-.btn-submit:disabled {
+.btn:disabled, .btn-submit:disabled {
     background-color: var(--disabled);
     cursor: not-allowed;
 }
 
 /* Hint and Category Style */
-#hint,
-#category {
+#hint, #category {
     margin-top: 15px;
     font-style: italic;
     color: var(--highlight);
@@ -448,10 +444,10 @@ h1 {
 }
 
 #answer-reveal {
-    text-align: center;
-    font-size: 1.2em;
-    color: #44bd32;
-    margin-top: 20px;
+	text-align: center;
+	font-size: 1.2em;
+	color: #44bd32;
+	margin-top: 20px;
 }
 
 /* Icons */
@@ -478,7 +474,7 @@ h1 {
     transition-property: var(--transition-colors);
 }
 
-#scoreboard>div {
+#scoreboard > div {
     background-color: var(--box);
     padding: 10px;
     border-radius: 8px;
@@ -496,7 +492,7 @@ h1 {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0,0,0,0.8);
     display: none;
     align-items: center;
     justify-content: center;
@@ -513,7 +509,7 @@ h1 {
     text-align: center;
     max-width: 500px;
     width: 90%;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     transition: var(--transition03);
     transition-property: var(--transition-colors);
 }
@@ -523,7 +519,6 @@ h1 {
         transform: translateY(-50px);
         opacity: 0;
     }
-
     to {
         transform: translateY(0);
         opacity: 1;
@@ -541,7 +536,6 @@ h1 {
     from {
         text-shadow: 0 0 5px var(--hint);
     }
-
     to {
         text-shadow: 0 0 10px var(--hint);
     }
@@ -635,12 +629,14 @@ h1 {
 }
 
 #instruction-modal {
+    background-color: var(--card);
     color: var(--text);
     padding: 25px;
     border-radius: 12px;
     max-width: 700px;
     overflow: hidden;
     overflow-y: auto;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3);
     text-align: left;
     line-height: 1.6;
     font-size: 1.2em;
@@ -656,11 +652,6 @@ h1 {
     display: flex;
     padding: 20px;
     max-height: 80vh;
-    background-color: var(--card);
-    border-radius: 12px;
-    padding: 30px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-    animation: slideIn 0.5s ease forwards;
 }
 
 /* Animation for modal */
@@ -669,7 +660,6 @@ h1 {
         opacity: 0;
         transform: translateY(-50px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
@@ -690,8 +680,7 @@ h1 {
     font-size: 1.6em;
 }
 
-#instruction-modal p,
-#instruction-modal ul {
+#instruction-modal p, #instruction-modal ul {
     margin-bottom: 10px;
 }
 
@@ -710,15 +699,19 @@ h1 {
 
 /* Close button for the modal */
 #instruction-close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: transparent;
-    color: var(--close);
+    background-color: var(--close);
+    color: var(--text-static-light);
     border: none;
-    font-size: 1.5em;
+    padding: 10px 10px;
+    border-radius: 50%;
+    font-size: 0.75em;
     cursor: pointer;
-    transition: color 0.3s ease;
+    position: absolute;
+    transition: var(--transition03);
+    animation: slideIn 0.5s ease forwards;
+    z-index: 100;
+    right: 10px;
+    top: 5px;
 }
 
 #instruction-modal .btn-close:hover {
@@ -775,7 +768,7 @@ h1 {
     padding: 6px;
     transition: var(--transition03);
     transition-property: var(--transition-all);
-}
+  }
 
 .down {
     transform: rotate(45deg);
@@ -786,10 +779,11 @@ h1 {
     position: fixed;
     bottom: 10px;
     display: flex;
+    justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
     background-color: var(--card);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
     border-radius: 12px;
     gap: 20px;
     z-index: 100;
@@ -802,7 +796,6 @@ h1 {
         max-height: 0;
         opacity: 0;
     }
-
     to {
         max-height: 500px;
         opacity: 1;
@@ -814,7 +807,6 @@ h1 {
         max-height: 500px;
         opacity: 1;
     }
-
     to {
         max-height: 0;
         opacity: 0;
@@ -859,203 +851,6 @@ h1 {
     position: absolute;
 }
 
-#auth-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-}
-
-#auth-modal-wrapper {
-    position: relative;
-    max-width: 400px;
-    width: 90%;
-    background-color: var(--card);
-    border-radius: 12px;
-    padding: 30px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-    animation: slideIn 0.5s ease forwards;
-}
-
-#auth-modal {
-    text-align: center;
-}
-
-#auth-modal-title {
-    margin-bottom: 20px;
-    font-size: 2em;
-    color: var(--text-excitement);
-}
-
-#auth-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-#auth-form input {
-    width: 100%;
-    padding: 12px;
-    border: 2px solid var(--box);
-    border-radius: 8px;
-    background-color: var(--background);
-    color: var(--text);
-    font-size: 1em;
-    outline: none;
-    transition: border-color 0.3s ease;
-}
-
-#auth-form input:focus {
-    border-color: var(--accent);
-}
-
-#password-strength {
-    font-size: 0.9em;
-    color: var(--warning);
-}
-
-.error-message {
-    color: var(--warning);
-    font-size: 0.9em;
-    margin-top: -10px;
-    margin-bottom: 10px;
-}
-
-#auth-submit {
-    width: 100%;
-    padding: 12px;
-    font-size: 1em;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    background-color: var(--submit);
-    color: var(--text);
-    transition: background-color 0.3s ease;
-}
-
-#auth-submit:hover {
-    background-color: var(--submit-hover);
-}
-
-#auth-switch {
-    margin-top: 15px;
-    font-size: 0.9em;
-}
-
-#auth-switch a {
-    color: var(--highlight);
-    text-decoration: none;
-}
-
-#auth-switch a:hover {
-    text-decoration: underline;
-}
-
-#auth-close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: transparent;
-    color: var(--close);
-    border: none;
-    font-size: 1.5em;
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
-
-#auth-close:hover {
-    color: var(--close-hover);
-}
-
-/* Profile Modal Styles */
-#profile-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    display: none; 
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-}
-
-#profile-modal-wrapper {
-    position: relative;
-    max-width: 400px;
-    width: 90%;
-    background-color: var(--card);
-    border-radius: 12px;
-    padding: 30px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-    animation: slideIn 0.5s ease forwards;
-}
-
-#profile-modal {
-    text-align: center;
-}
-
-#profile-modal h2 {
-    margin-bottom: 20px;
-    font-size: 2em;
-    color: var(--text-excitement);
-}
-
-#profile-modal p {
-    margin-bottom: 15px;
-    font-size: 1em;
-    color: var(--text);
-}
-
-#profile-close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: transparent;
-    color: var(--close);
-    border: none;
-    font-size: 1.5em;
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
-
-#profile-close:hover {
-    color: var(--close-hover);
-}
-
-/* User Authentication Buttons */
-#user-auth {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-#login-btn,
-#logout-btn,
-#profile-btn {
-    background-color: var(--hint);
-    color: var(--text);
-    border: none;
-    padding: 10.5px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.75em;
-    transition: background-color 0.3s ease;
-}
-
-#login-btn:hover,
-#logout-btn:hover,
-#profile-btn:hover {
-    background-color: var(--hint-hover);
-}
-
 
 /* Responsive styles for desktop */
 @media (min-width: 768px) {
@@ -1089,32 +884,27 @@ h1 {
         margin-bottom: 0;
     }
 
-    #scoreboard>div {
+    #scoreboard > div {
         width: calc(50% - 10px);
     }
-
     .btn {
         width: 50%;
     }
-
     #instruction-modal {
         font-size: 1.2em;
     }
-
+    
     .accordion-toggle {
         display: none;
     }
-
     .accordion-content {
         display: block;
         opacity: 1;
         max-height: unset;
     }
-
     .dropdown-toggle {
         display: none;
     }
-
     .dropdown-content {
         display: flex;
         flex-wrap: wrap;
@@ -1122,7 +912,6 @@ h1 {
         max-height: unset;
         gap: 20px;
     }
-
     #toolbar {
         position: unset;
         width: 100%;
