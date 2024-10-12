@@ -153,17 +153,17 @@
 
     <div id="game-wrapper">
         <!-- Login Button and User Greeting -->
-        <div id="user-auth" style="display: hidden">
-            <button id="login-btn">Login</button>
-            <span id="user-greeting" style="display: none;">
-                Welcome, <span id="username-display"></span>!
-                <button id="profile-btn">Profile</button>
-                <button id="logout-btn">Logout</button>
-            </span>
-        </div>
 
         <div id="toolbar">
             <button id="instructions-btn" class="btn-instructions">How to Play</button>
+            <div id="user-auth">
+                <button id="login-btn">Login</button>
+                <span id="user-greeting" style="display: none;">
+                    Welcome, <span id="username-display"></span>!
+                    <button id="profile-btn">Profile</button>
+                    <button id="logout-btn">Logout</button>
+                </span>
+            </div>
             <div id="theme-switch">
                 <label class="switch">
                     <input type="checkbox" id="theme-toggle">
