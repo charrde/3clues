@@ -12,9 +12,10 @@ import { UI } from './ui.js';
 
 export class Game {
     constructor(gameData) {
-        this.gameData = gameData; // Array of game objects
+        this.gameData = gameData;
         this.ui = new UI(this);
         this.initializeGame();
+        this.currentMode = GAME_MODES.DAILY;
     }
 
     /*** Initialization ***/
